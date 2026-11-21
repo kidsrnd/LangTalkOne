@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>낭독원 원서 사이트 v3</title>
+<title>낭독원 원서 사이트 v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -168,6 +168,33 @@ details.admin summary::-webkit-details-marker{display:none}
 .wddots i.on{background:var(--red)}.wddots i.done{background:var(--ok)}
 .confetti{position:fixed;top:-20px;width:10px;height:16px;z-index:99;pointer-events:none;animation:cfall linear forwards}
 @keyframes cfall{to{transform:translateY(110vh) rotate(720deg);opacity:.9}}
+
+/* v4 빙고판 */
+.bgser{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;font-weight:800;color:var(--navy);font-size:16px;background:#fff}
+.bgser small{color:var(--mid);font-weight:700}
+.bgbar{height:8px;border-radius:9px;background:#E7EAF0;margin-top:6px;overflow:hidden}.bgbar i{display:block;height:100%;background:var(--red)}
+.bgboard{margin:16px 0 6px}
+.bghead{display:flex;justify-content:space-between;align-items:baseline;font-weight:900;color:var(--navy);font-size:17px;margin-bottom:8px}
+.bghead small{font-size:13px;color:var(--mid);font-weight:800}
+.bggrid{display:grid;gap:6px}
+.bgc{position:relative;aspect-ratio:1/1;border:2px solid var(--line);border-radius:10px;background:#fff;padding:5px;font-size:13px;font-weight:800;color:var(--ink);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.25;cursor:pointer;overflow:hidden;word-break:keep-all}
+.bgc.done{background:var(--navy);border-color:var(--navy);color:#fff}
+.bgc.done:after{content:'✓';position:absolute;top:2px;right:6px;font-size:15px;color:#F2B705}
+.bgc .dt{position:absolute;bottom:3px;left:0;right:0;font-size:10px;font-weight:700;opacity:.85}
+.bgc.pick{border:3px solid var(--red);background:var(--red-l)}
+.bgc.pick:before{content:'★ 읽을 책';position:absolute;top:3px;left:0;right:0;font-size:10px;color:var(--red);font-weight:900}
+.bgc.free{background:#F7F3EA;color:var(--mid);cursor:default}
+.bgc.line{box-shadow:0 0 0 3px #F2B705 inset}
+.bgreward{margin-top:8px;padding:11px 14px;border-radius:12px;background:#FFF6D9;color:#7A5200;font-weight:800;font-size:14.5px;line-height:1.6}
+@media (max-width:520px){.bgc{font-size:11.5px}.bgc .dt{display:none}}
+.bgov{position:fixed;inset:0;background:rgba(18,41,78,.88);z-index:98;display:flex;align-items:center;justify-content:center;padding:20px}
+.bgov .box{background:#fff;border-radius:22px;max-width:420px;width:100%;padding:26px 22px;text-align:center}
+.bgov .big{font-size:64px;line-height:1.1}
+.bgov h3{font-size:24px;font-weight:900;color:var(--navy);margin:10px 0 6px}
+.bgov p{font-size:16px;font-weight:700;color:var(--ink);line-height:1.6;margin:0 0 14px}
+.bgov .kama{font-size:80px;display:inline-block;animation:kama 2.4s ease-in-out infinite}
+@keyframes kama{0%{transform:translateX(-30px) rotate(-4deg)}50%{transform:translateX(30px) rotate(4deg)}100%{transform:translateX(-30px) rotate(-4deg)}}
+.petal{position:fixed;top:-30px;font-size:22px;z-index:99;pointer-events:none;animation:cfall linear forwards}
 </style>
 </head>
 <body>
@@ -176,6 +203,7 @@ details.admin summary::-webkit-details-marker{display:none}
   <nav class="nav" id="nav" style="display:none">
     <button data-p="home" onclick="go('home')">홈</button>
     <button data-p="word" onclick="go('word')">단어 익히기</button>
+    <button data-p="bingo" onclick="go('bingo')">빙고판</button>
     <button data-p="grade" onclick="go('grade')">퀴즈 채점</button>
     <button data-p="rank" onclick="go('rank')">다독왕 · 포인트왕</button>
     <button class="out" onclick="restart()">나가기</button>
@@ -217,6 +245,7 @@ details.admin summary::-webkit-details-marker{display:none}
     <div class="panel" style="flex:2 1 460px">
       <h2>오늘 할 일</h2>
       <button class="todo" onclick="go('word')">🔤 단어 익히기 <small>책 읽기 전에 · 5개씩</small></button>
+      <button class="todo" onclick="go('bingo')">🎯 빙고판에서 다음 책 고르기 <small>읽을 책은 내가 정해요</small></button>
       <button class="todo primary" onclick="go('grade')">📚 퀴즈북 채점하기 <small>종이 퀴즈북을 다 풀었으면</small></button>
       <button class="todo" onclick="go('grade')">✏️ 틀린 문제 고치기 · 🎤 소리 내어 읽기 <small>채점하면 바로 이어서</small></button>
       <button class="todo" onclick="go('rank')">🏆 이번 달 순위 보기 <small>다독왕 · 포인트왕</small></button>
@@ -240,6 +269,25 @@ details.admin summary::-webkit-details-marker{display:none}
     <div class="panel"><h2>⭐ 포인트왕 (포인트)</h2><div id="rkPoints"></div></div>
   </div>
 </section>
+
+
+<!-- 빙고판 (v4) -->
+<section class="page" id="pg-bingo">
+  <div class="gradewrap">
+    <div class="card" id="bgPick">
+      <label>🎯 어떤 시리즈 빙고판을 볼까요?</label>
+      <div id="bgSerList"><div class="hint">불러오는 중…</div></div>
+      <div class="hint">빙고판에서 다음에 읽을 책을 내가 골라요(★). 다 읽고 퀴즈를 채점하면 칸이 저절로 채워져요. 한 줄이면 박수, 목표 줄을 채우면 상이나 돌림판!</div>
+    </div>
+    <div class="card" id="bgView" style="display:none">
+      <label id="bgTitle"></label>
+      <div class="hint" id="bgInfo"></div>
+      <div id="bgBoards"></div>
+      <div style="margin-top:14px"><button class="btn btn-ghost" onclick="bingoHome()">← 다른 시리즈 보기</button></div>
+    </div>
+  </div>
+</section>
+<div class="bgov" id="bgOv" style="display:none" onclick="if(event.target===this)bgClose()"><div class="box" id="bgOvBox"></div></div>
 
 <!-- 단어 익히기 (v3) -->
 <section class="page" id="pg-word">
@@ -444,6 +492,7 @@ function submitQuiz(){
     if(!d||!d.ok){fail((d&&d.error)||'채점하지 못했어요. 다시 눌러 주세요.');return;}
     b.disabled=false;b.textContent='✅ 다 풀었어요 — 채점하기';
     CUR.key.answers=d.key;CUR.wrong=d.wrong.slice();CUR.mine=d.records||CUR.mine;CUR.rank=d.rank||CUR.rank;
+    try{bgAfterSubmit(CUR.key.series,CUR.key.title);}catch(e){}
     document.getElementById('resPct').textContent=d.pct+'점';
     document.getElementById('resSub').textContent=CUR.name+' · '+CUR.key.title+' · '+d.right+'개 맞음 / '+d.count+'문항';
     document.getElementById('resBadge').innerHTML=d.pct===100
@@ -666,12 +715,13 @@ function lvOf(series){var k=sk(series),best=null,bl=0;
 function myLevel(){var mine=(CUR.mine||[]).slice().reverse(),hi=null;
   mine.forEach(function(r){var i=lvOf(r.series);if(i!==null&&(hi===null||i>hi))hi=i;});return hi;}
 function go(p,keep){
-  ['login','home','rank','grade','word'].forEach(function(x){document.getElementById('pg-'+x).classList.toggle('on',x===p);});
+  ['login','home','rank','grade','word','bingo'].forEach(function(x){document.getElementById('pg-'+x).classList.toggle('on',x===p);});
   document.getElementById('nav').style.display=p==='login'?'none':'flex';
   document.querySelectorAll('#nav button[data-p]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-p')===p);});
   if(p==='grade'&&!keep){backToGrade();return;}
   if(p==='home')renderHome();
   if(p==='word')wordHome();
+  if(p==='bingo')bingoHome();
   window.scrollTo(0,0);
 }
 function renderHome(){
@@ -802,6 +852,120 @@ function party(n){var c=['#C63A26','#1B3A6B','#F2B705','#2C7A4B','#E86FA4'];for(
   e.style.left=(Math.random()*100)+'vw';e.style.background=c[i%c.length];e.style.animationDuration=(1.8+Math.random()*1.8)+'s';e.style.animationDelay=(Math.random()*.6)+'s';
   document.body.appendChild(e);(function(x){setTimeout(function(){x.remove();},4500);})(e);}}
 function clap(){party(18);}
+/* ===== v4: 다독 빙고판 — 아이가 읽을 책을 고르고(★), 읽은 책은 자동으로 채워짐 ===== */
+var BG={name:'',loaded:false,read:[],picks:[],ser:''};
+var BG_GOAL={5:5,4:4,3:3};
+var BG_REWARD={5:'🏆 5줄 빙고! 상을 받아요 — 선생님께 이 화면을 보여 주세요.',4:'🎡 4줄 빙고! 돌림판을 2번 돌려요 — 선생님께 이 화면을 보여 주세요.',3:'🎡 3줄 빙고! 돌림판을 1번 돌려요 — 선생님께 이 화면을 보여 주세요.'};
+function bgSer(s){return String(s||'').replace(/\s*2026\s*개정/,'').trim();}
+function bgKey(t){return String(t||'').toLowerCase().replace(/[\u2019\u2018'`]/g,'').replace(/^the\s+/,'').replace(/[^a-z0-9]/g,'');}
+function bgSame(a,b){var A=bgKey(a),B=bgKey(b);if(!A||!B)return false;if(A===B)return true;
+  if(A.length>=8&&B.slice(-A.length)===A)return true;if(B.length>=8&&A.slice(-B.length)===B)return true;return false;}
+function bgAuth(){return '&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin;}
+function bgSeriesList(){var m={},order=[];
+  KEYS.forEach(function(k){var s=bgSer(k.series);if(!m[s]){m[s]=[];order.push(s);}
+    if(!m[s].some(function(t){return bgSame(t,k.title);}))m[s].push(k.title);});
+  return {map:m,order:order};}
+function bgDone(title){for(var i=0;i<BG.read.length;i++)if(bgSame(BG.read[i].t,title))return BG.read[i];return null;}
+function bgPicked(s,title){return BG.picks.some(function(p){return bgSer(p.s)===s&&bgSame(p.t,title);});}
+function bgLayout(n){var out=[];while(n>0){var size=n>=21?5:(n>=13?4:3),take=Math.min(n,size*size);out.push({size:size,n:take});n-=take;}return out;}
+function bgBoards(s,books){var lay=bgLayout(books.length),i=0;
+  return lay.map(function(L){var cells=[];for(var k=0;k<L.size*L.size;k++){
+      if(k<L.n){var t=books[i++],d=bgDone(t);cells.push({t:t,done:!!d,date:d?d.d:'',pick:!d&&bgPicked(s,t)});}
+      else cells.push({free:true,done:true});}
+    return {size:L.size,cells:cells};});}
+function bgLines(b){var z=b.size,c=b.cells,lines=[],ok=function(i){return c[i].done;};
+  for(var r=0;r<z;r++){var a=[];for(var q=0;q<z;q++)a.push(r*z+q);if(a.every(ok))lines.push(a);}
+  for(var q2=0;q2<z;q2++){var b2=[];for(var r2=0;r2<z;r2++)b2.push(r2*z+q2);if(b2.every(ok))lines.push(b2);}
+  var d1=[],d2=[];for(var k=0;k<z;k++){d1.push(k*z+k);d2.push(k*z+(z-1-k));}
+  if(d1.every(ok))lines.push(d1);if(d2.every(ok))lines.push(d2);return lines;}
+function bgLoad(){BG.name=CUR.name;
+  return jsonp('bingoGet',bgAuth()).then(function(d){if(d&&d.ok){BG.read=d.read||[];BG.picks=d.picks||[];BG.loaded=true;}return d;});}
+function bingoHome(){
+  document.getElementById('bgPick').style.display='';document.getElementById('bgView').style.display='none';
+  var box=document.getElementById('bgSerList');
+  if(!BG.loaded||BG.name!==CUR.name){box.innerHTML='<div class="hint">⏳ 내가 읽은 책을 불러오는 중… (처음엔 30초쯤 걸릴 수 있어요)</div>';
+    bgLoad().then(function(d){if(!d||!d.ok){box.innerHTML='<div class="hint">'+esc((d&&d.error)||'불러오지 못했어요. 다시 눌러 주세요.')+'</div>';return;}bingoHome();})
+      .catch(function(){box.innerHTML='<div class="hint">인터넷이 느려요. 잠시 뒤 다시 눌러 주세요.</div>';});return;}
+  var L=bgSeriesList(),rows=L.order.map(function(s){var b=L.map[s],n=b.filter(function(t){return bgDone(t);}).length;return {s:s,n:n,all:b.length};});
+  rows.sort(function(a,b){return (b.n>0)-(a.n>0)||b.n/b.all-a.n/a.all;});
+  box.innerHTML=rows.map(function(r){return '<div class="bgser" onclick="bgOpen(\''+esc(r.s).replace(/'/g,"\\'")+'\')"><span>'+esc(r.s)
+    +'<div class="bgbar"><i style="width:'+Math.round(r.n/r.all*100)+'%"></i></div></span><small>'+r.n+' / '+r.all+'권</small></div>';}).join('');
+}
+function bgOpen(s){BG.ser=s;document.getElementById('bgPick').style.display='none';document.getElementById('bgView').style.display='';bgRender(true);window.scrollTo(0,0);}
+function bgEval(s){var books=bgSeriesList().map[s]||[],boards=bgBoards(s,books);
+  var ev=boards.map(function(b,bi){var lines=bgLines(b);return {bi:bi,size:b.size,lines:lines.length,goal:BG_GOAL[b.size],full:b.cells.every(function(c){return c.done;}),ll:lines};});
+  return {books:books,boards:boards,ev:ev};}
+function bgRender(celebrate){
+  var s=BG.ser,E=bgEval(s),books=E.books,boards=E.boards;
+  var nRead=books.filter(function(t){return bgDone(t);}).length,nPick=books.filter(function(t){return !bgDone(t)&&bgPicked(s,t);}).length;
+  document.getElementById('bgTitle').textContent='🎯 '+s+' 빙고판';
+  document.getElementById('bgInfo').textContent='읽은 책 '+nRead+' / '+books.length+'권 · 고른 책(★) '+nPick+'권 — 읽지 않은 칸을 누르면 다음에 읽을 책으로 골라져요. (한 번에 3권까지)';
+  var ev=E.ev;
+  document.getElementById('bgBoards').innerHTML=boards.map(function(b,bi){
+    var lines=ev[bi].ll,goal=ev[bi].goal,inLine={};
+    lines.forEach(function(l){l.forEach(function(i){inLine[i]=1;});});
+    return '<div class="bgboard"><div class="bghead"><span>빙고 '+(bi+1)+' · '+b.size+'×'+b.size+'</span><small>'+lines.length+'줄 / 목표 '+goal+'줄</small></div>'
+      +'<div class="bggrid" style="grid-template-columns:repeat('+b.size+',1fr)">'+b.cells.map(function(c,ci){
+        if(c.free)return '<div class="bgc free'+(inLine[ci]?' line':'')+'">FREE</div>';
+        var cls='bgc'+(c.done?' done':'')+(c.pick?' pick':'')+(inLine[ci]?' line':'');
+        var nm=c.t,pre=c.t.slice(0,s.length);if(pre.toLowerCase()===s.toLowerCase()&&/^[:,]?\s+[^'’]/.test(c.t.slice(s.length)))nm=c.t.slice(s.length).replace(/^[:,]?\s+/,'');
+        return '<div class="'+cls+'" onclick="bgTap('+bi+','+ci+')">'+esc(nm||c.t)+(c.done&&c.date?'<span class="dt">'+esc(c.date.slice(5))+'</span>':'')+'</div>';}).join('')+'</div>'
+      +(lines.length>=goal?'<div class="bgreward">'+BG_REWARD[b.size]+'</div>':'')+'</div>';}).join('');
+  BG._boards=boards;
+  bgCheck(s,ev,books.length,celebrate);
+}
+function bgTap(bi,ci){var c=BG._boards[bi].cells[ci];if(!c||c.free)return;
+  if(c.done){alert('이미 읽은 책이에요! ('+(c.date||'')+')');return;}
+  var on=!c.pick,s=BG.ser;
+  if(on&&bgSeriesList().map[s].filter(function(t){return !bgDone(t)&&bgPicked(s,t);}).length>=3){alert('읽을 책은 한 번에 3권까지 고를 수 있어요. 먼저 고른 책을 읽고 채점해요!');return;}
+  if(on)BG.picks.push({s:s,t:c.t});else BG.picks=BG.picks.filter(function(p){return !(bgSer(p.s)===s&&bgSame(p.t,c.t));});
+  bgRender(false);
+  jsonp('bingoPick',bgAuth()+'&series='+encodeURIComponent(s)+'&title='+encodeURIComponent(c.t)+'&on='+(on?1:0)).catch(function(){});
+}
+function bgState(s){try{return JSON.parse(localStorage.getItem('bg_'+CUR.name+'_'+s)||'null');}catch(e){return null;}}
+function bgSave(s,o){try{localStorage.setItem('bg_'+CUR.name+'_'+s,JSON.stringify(o));}catch(e){}}
+function bgCheck(s,ev,nBooks,celebrate){
+  var prev=bgState(s),now={b:ev.map(function(e){return {l:e.lines,f:e.full};}),all:ev.every(function(e){return e.full;})};
+  bgSave(s,now);
+  if(!prev||!celebrate)return;   /* 처음 보는 판은 저장만 (예전 기록으로 알림이 한꺼번에 가지 않게) */
+  var show=null;
+  ev.forEach(function(e,i){var p=prev.b[i]||{l:0,f:false};
+    if(e.lines>p.l){
+      if(e.lines>=e.goal&&p.l<e.goal){show=show&&show.lv>2?show:{lv:2,e:e};
+        jsonp('bingoEvent',bgAuth()+'&type=goal&series='+encodeURIComponent(s)+'&board='+(i+1)+'&lines='+e.goal+'&size='+e.size).catch(function(){});}
+      else if(!show)show={lv:1,e:e};}
+    if(e.full&&!p.f)show=show&&show.lv>3?show:{lv:3,e:e};});
+  if(now.all&&!prev.all){show={lv:4};
+    jsonp('bingoEvent',bgAuth()+'&type=series&series='+encodeURIComponent(s)+'&board=all&books='+nBooks).catch(function(){});}
+  if(show)bgCelebrate(show,s);
+}
+function bgCelebrate(o,s){
+  var box=document.getElementById('bgOvBox'),h='';
+  if(o.lv===1){clap();bgSound([660,880]);h='<div class="big">👏👏</div><h3>빙고 한 줄!</h3><p>'+esc(s)+' 빙고판에 한 줄이 생겼어요. 계속 가 볼까요?</p>';}
+  if(o.lv===2){party(90);bgSound([523,659,784,1047,784,1047]);h='<div class="big">🎺🎉</div><h3>'+o.e.goal+'줄 빙고 성공!</h3><p>'+BG_REWARD[o.e.size]+'</p>';}
+  if(o.lv===3){bgPetals(60);party(60);bgSound([523,659,784,1047]);h='<div class="big">🌸🌸🌸</div><h3>빙고판 전체 완성!</h3><p>이 빙고판의 책을 모두 읽었어요. 정말 대단해요!</p>';}
+  if(o.lv===4){bgPetals(110);party(140);bgSound([392,523,659,784,1047,1319,1047,1319]);
+    h='<div class="kama">🎎</div><h3>꽃가마 출발! 시리즈 완성!</h3><p>'+esc(s)+' 시리즈를 모두 읽었어요! 오늘의 주인공이에요. 선생님께 꼭 보여 주세요!</p>';}
+  box.innerHTML=h+'<button class="btn btn-go" onclick="bgClose()">좋아요!</button>';
+  document.getElementById('bgOv').style.display='flex';
+}
+function bgClose(){document.getElementById('bgOv').style.display='none';}
+function bgPetals(n){var f=['🌸','🌼','🌺','💮','🎉'];for(var i=0;i<n;i++){var e=document.createElement('i');e.className='petal';e.textContent=f[i%f.length];
+  e.style.left=(Math.random()*100)+'vw';e.style.animationDuration=(2.5+Math.random()*2.5)+'s';e.style.animationDelay=(Math.random()*1.5)+'s';
+  document.body.appendChild(e);(function(x){setTimeout(function(){x.remove();},6500);})(e);}}
+function bgSound(notes){try{var A=window.AudioContext||window.webkitAudioContext;if(!A)return;var ac=new A(),t=ac.currentTime;
+  notes.forEach(function(f,i){var o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t+i*0.16);g.gain.exponentialRampToValueAtTime(0.25,t+i*0.16+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+i*0.16+0.3);
+    o.connect(g);g.connect(ac.destination);o.start(t+i*0.16);o.stop(t+i*0.16+0.32);});}catch(e){}}
+function bgAfterSubmit(series,title){
+  var run=function(){var s=bgSer(series);
+    if(!bgState(s)){var E0=bgEval(s);if(E0.books.length)bgSave(s,{b:E0.ev.map(function(e){return {l:e.lines,f:e.full};}),all:E0.ev.every(function(e){return e.full;})});}
+    if(!bgDone(title))BG.read.push({s:series,t:title,d:today()});
+    var E=bgEval(s);if(!E.books.length)return;
+    setTimeout(function(){bgCheck(s,E.ev,E.books.length,true);},1500);};
+  if(BG.loaded&&BG.name===CUR.name)run();else bgLoad().then(function(d){if(d&&d.ok)run();}).catch(function(){});
+}
+
 loadAll();
 </script>
 </body>
