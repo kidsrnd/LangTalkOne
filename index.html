@@ -92,6 +92,17 @@ input[type=password]{width:100%;font-family:inherit;font-size:22px;letter-spacin
 .audiobox{margin-top:14px;text-align:center}
 .btn-audio{background:#fff;color:var(--navy);border:2px solid var(--navy)}
 .rdbox{margin-top:14px;text-align:left;background:var(--bg2);border:1.5px solid var(--line);border-radius:13px;padding:14px}
+
+.phbook{display:block;width:100%;text-align:left;border:2px solid var(--navy);border-radius:14px;background:#fff;padding:12px 14px;margin:8px 0;font-size:17px;font-weight:800;color:var(--navy);cursor:pointer}
+.phbook small{display:block;font-size:13px;font-weight:600;color:#3E4759;margin-top:2px}
+.phbook.done{border-color:#2E7D32;background:#F1F8E9}
+.phpage{font-size:30px;font-weight:800;line-height:1.5;color:#1B3A6B;text-align:center;padding:28px 10px;min-height:150px}
+.phnav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.whw{display:inline-block;background:#C63A26;color:#fff;border-radius:8px;padding:0 8px;margin-right:4px}
+.whchip{display:inline-block;border:2px solid #1B3A6B;border-radius:20px;padding:6px 12px;margin:4px;font-size:16px;font-weight:800;cursor:pointer;background:#fff;color:#1B3A6B}
+.whchip.ok{background:#2E7D32;color:#fff;border-color:#2E7D32}.whchip.no{background:#C63A26;color:#fff;border-color:#C63A26}
+.phq{font-size:22px;font-weight:800;color:#1B3A6B;margin:10px 0}
+.phdiary{font-size:22px;font-weight:800;color:#1B3A6B;text-align:center;margin:14px 0;line-height:1.6}
 .rdstep{font-size:14px;font-weight:800;color:var(--navy);margin:4px 0 6px}
 .rdline{font-size:16px;font-weight:800;color:var(--ink);line-height:1.7;background:#fff;border-left:5px solid var(--red);border-radius:9px;padding:9px 12px;margin-bottom:10px;word-break:keep-all}
 .recbtn{width:100%;font-family:inherit;font-size:17px;font-weight:800;border:none;border-radius:13px;padding:15px;cursor:pointer;background:var(--red);color:#fff}
@@ -203,10 +214,11 @@ details.admin summary::-webkit-details-marker{display:none}
   <button id="chBtn" onclick="chToggle()" title="축하 소리 켜기/끄기" style="position:fixed;right:12px;bottom:12px;z-index:60;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer">🔊</button>
   <nav class="nav" id="nav" style="display:none">
     <button data-p="home" onclick="go('home')">홈</button>
+    <button data-p="phon" onclick="go('phon')">파닉스 리더스</button>
     <button data-p="bingo" onclick="go('bingo')">빙고판</button>
     <button data-p="word" onclick="go('word')">단어 익히기</button>
+    <button data-p="read" onclick="go('read')">정독하기</button>
     <button data-p="grade" onclick="go('grade')">퀴즈 채점</button>
-    <button data-p="rank" onclick="go('rank')">다독왕 · 포인트왕</button>
     <button class="out" onclick="restart()">나가기</button>
   </nav>
 </div></header>
@@ -245,16 +257,17 @@ details.admin summary::-webkit-details-marker{display:none}
   <div class="main">
     <div class="panel" style="flex:2 1 460px">
       <h2>오늘 할 일</h2>
+      <button class="todo" onclick="go('phon')">🥚 파닉스 리더스 <small>듣고 따라 읽기 · 질문에 대답하기 · 오늘의 일기</small></button>
       <button class="todo" onclick="go('bingo')">🎯 빙고판에서 다음 책 고르기 <small>읽을 책은 내가 정해요</small></button>
       <button class="todo" onclick="go('word')">🔤 단어 익히기 <small>책 읽기 전에 · 5개씩</small></button>
+      <button class="todo" onclick="go('read')">📖 정독하기 <small>음원 들으며 1회독 · 책 덮고 2회독</small></button>
       <button class="todo primary" onclick="go('grade')">📚 퀴즈북 채점하기 <small>종이 퀴즈북을 다 풀었으면</small></button>
       <button class="todo" onclick="go('grade')">✏️ 틀린 문제 고치기 · 🎤 소리 내어 읽기 <small>채점하면 바로 이어서</small></button>
-      <button class="todo" onclick="go('rank')">🏆 이번 달 순위 보기 <small>다독왕 · 포인트왕</small></button>
       <h2 style="margin-top:18px">이번 달 내가 읽은 책</h2>
       <div class="reclist" id="homeRecs"></div>
     </div>
     <div class="panel rankbox">
-      <h2>포인트왕 TOP 3</h2>
+      <h2>📚 다독왕 TOP 3</h2>
       <div id="homeTop"></div>
     </div>
   </div>
@@ -308,6 +321,41 @@ details.admin summary::-webkit-details-marker{display:none}
 </section>
 
 <!-- 채점 -->
+<!-- 파닉스 리더스 (v9) -->
+<section class="page" id="pg-phon">
+  <div class="gradewrap">
+    <div class="card" id="phList">
+      <label>🥚 에그스 리더스 · 파닉스</label>
+      <div class="hint">⓪ 함께 익힐 단어 → ① 듣고 따라 읽기 → ② 질문에 대답하기 → ③ 오늘의 일기. 빨간 글자 = 짧은 소리, 파란 글자 = 긴 소리(회색 e는 소리 없음). 종이 독서기록(제목·날짜·그림·모르는 단어)은 책에 써요.</div>
+      <div id="phBooks"></div>
+    </div>
+    <div class="card" id="phView" style="display:none">
+      <label id="phTitle"></label>
+      <div id="phArea"></div>
+      <div style="margin-top:12px"><button class="btn btn-ghost" onclick="phHome()">← 책 목록</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- 정독하기 (v8) -->
+<section class="page" id="pg-read">
+  <div class="gradewrap">
+    <div class="card" id="rdPick">
+      <label>📖 정독할 책을 골라요</label>
+      <div id="rdPicks"></div>
+      <input type="text" id="rdSearch" placeholder="책 제목으로 찾기 (예: Froggy)" oninput="rdList()" autocomplete="off" style="margin-top:10px">
+      <div id="rdList"></div>
+      <div class="hint">빙고판에서 ★로 고른 책이 위에 나와요. 음원을 들으며 한 번, 책을 덮고 한 번 — 두 번 읽고 퀴즈를 풀어요.</div>
+    </div>
+    <div class="card" id="rdView" style="display:none">
+      <label id="rdTitle"></label>
+      <div id="rdAudio"></div>
+      <div id="rdSteps"></div>
+      <div style="margin-top:12px"><button class="btn btn-ghost" onclick="rdBack()">← 다른 책 고르기</button></div>
+    </div>
+  </div>
+</section>
+
 <section class="page" id="pg-grade">
   <div class="gradewrap">
   <!-- STEP 2: 판 선택 -->
@@ -715,11 +763,13 @@ function lvOf(series){var k=sk(series),best=null,bl=0;
 function myLevel(){var mine=(CUR.mine||[]).slice().reverse(),hi=null;
   mine.forEach(function(r){var i=lvOf(r.series);if(i!==null&&(hi===null||i>hi))hi=i;});return hi;}
 function go(p,keep){
-  ['login','home','rank','grade','word','bingo'].forEach(function(x){document.getElementById('pg-'+x).classList.toggle('on',x===p);});
+  ['login','home','rank','grade','word','bingo','read','phon'].forEach(function(x){document.getElementById('pg-'+x).classList.toggle('on',x===p);});
   document.getElementById('nav').style.display=p==='login'?'none':'flex';
   document.querySelectorAll('#nav button[data-p]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-p')===p);});
   if(p==='grade'&&!keep){backToGrade();return;}
   if(p==='home')renderHome();
+  if(p==='read')readHome();
+  if(p==='phon')phHome();
   if(p==='word')wordHome();
   if(p==='bingo')bingoHome();
   window.scrollTo(0,0);
@@ -739,8 +789,10 @@ function renderHome(){
   var sc=mon.slice().reverse().slice(0,6);
   document.getElementById('homeRecs').innerHTML=sc.length?sc.map(function(r){
     return '<div>'+esc(r.title)+'<span class="sc">'+(r.score===null||r.score===''||r.score===undefined?'읽음':r.score+'점')+'</span></div>';}).join(''):'<div class="hint">이번 달 기록이 아직 없어요. 첫 책을 채점해 보세요!</div>';
-  var t=R&&R.points.top?R.points.top.slice(0,3):[];
-  document.getElementById('homeTop').innerHTML=t.length?t.map(function(x,k){return '<div class="rk'+(x.name===CUR.name?' me':'')+'"><span><b>'+(k+1)+'</b>'+esc(x.name)+'</span><span>'+x.points+'점</span></div>';}).join(''):'<div class="hint" style="color:#C9D3E6">순위를 불러오는 중이에요.</div>';
+  var t=R&&R.books&&R.books.top?R.books.top.slice(0,3):[];
+  var bm=R&&R.books?R.books.me:0;
+  document.getElementById('homeTop').innerHTML=t.length?t.map(function(x,k){return '<div class="rk'+(x.name===CUR.name?' me':'')+'"><span><b>'+(k+1)+'</b>'+esc(x.name)+'</span><span>'+x.books+'권</span></div>';}).join('')
+    +(bm>3?'<div class="mine-line" style="color:#F3C9C2">나는 <b>'+bm+'위</b> · '+((R.mine&&R.mine.books)||0)+'권</div>':''):'<div class="hint" style="color:#C9D3E6">순위를 불러오는 중이에요.</div>';
 }
 function rkList(box,key,unit){
   var R=CUR.rank,el=document.getElementById(box);
@@ -753,7 +805,7 @@ function renderRank(){
   var R=CUR.rank;document.getElementById('rankPeriod').textContent=R?R.period+' 순위':'이번 달 순위';
   rkList('rkBooks','books');rkList('rkPoints','points');
   var b=document.getElementById('rankBanner');
-  if(b&&R&&R.mine)b.innerHTML='🏆 이번 달 '+R.mine.books+'권 · '+R.mine.points+'포인트<br>다독왕 '+(R.books.me||'-')+'위 · 포인트왕 '+(R.points.me||'-')+'위';
+  if(b&&R&&R.mine)b.innerHTML='🏆 이번 달 '+R.mine.books+'권 · 다독왕 '+(R.books.me||'-')+'위';
 }
 function refreshRank(){
   if(!CUR.name||!CUR.pin)return;
@@ -996,6 +1048,105 @@ function bgAfterSubmit(series,title){
 
 loadAll();
 </script>
-<script>chBtn();</script>
+<script>chBtn();
+/* v9: 파닉스 리더스 — 듣고 따라 읽기 → 의문사 질문 → 오늘의 일기 (서버 tts = 일레븐랩스, 드라이브 저장) */
+var PH_BOOKS=[{"id": "s1", "t": "Pam's Bag", "sound": "단모음 a", "theme": "숫자 1~5 · 기분", "p": ["Pam had a bag.", "One cap was in the bag.", "Pam had two hats.", "Pam had three maps.", "Pam had four pans.", "Dad tapped the bag. Tap, tap!", "Five rats! The rats ran!", "Dad ran. Pam ran.", "Was Pam sad?", "No! Pam and Dad sat. Ha, ha!"], "q": [["Who had a bag?", "who", ["Pam", "Dad", "a rat"], 0], ["What was in the bag?", "what", ["a cap", "a cat", "a van"], 0], ["How many rats ran?", "how many", ["two", "five", "three"], 1], ["How does Pam feel at the end?", "how", ["sad", "mad", "glad"], 2]], "v": "a", "w": [["bag", "가방"], ["cap", "모자"], ["had", "가지고 있었다"], ["map", "지도"], ["pan", "프라이팬"], ["tapped", "톡톡 두드렸다"], ["rat", "쥐"], ["ran", "달렸다"], ["sad", "슬픈"], ["sat", "앉았다"]]}, {"id": "s2", "t": "Ten Red Hens", "sound": "단모음 e (+a)", "theme": "숫자 6~10", "p": ["Meg has a red hen.", "Ted has a red hen.", "Six red hens get wet.", "Seven red hens peck, peck.", "Seven red hens get in a bed.", "Eight red hens. Nine red hens.", "Ten red hens in a bed!", "The bed is a mess.", "Meg and Ted get a net.", "Yes! Ten hens, ten eggs!"], "q": [["Who has a red hen?", "who", ["Meg", "Dad", "Pam"], 0], ["Where do the hens get in?", "where", ["a bag", "a bed", "a van"], 1], ["How many hens?", "how many", ["six", "eight", "ten"], 2], ["What do Meg and Ted get?", "what", ["a net", "a hat", "a pen"], 0]], "v": "e", "w": [["red", "빨간"], ["hen", "암탉"], ["ten", "열, 10"], ["bed", "침대"], ["wet", "젖은"], ["net", "그물"], ["get", "얻다"], ["peck", "쪼다"], ["mess", "엉망"], ["yes", "응"]]}, {"id": "s3", "t": "Is It a Big Pig?", "sound": "단모음 i (+a, e)", "theme": "What · Who 묻기", "p": ["Tim has a big bin.", "What is in the bin?", "Is it a cat? No.", "Is it a hen? No.", "It is big. It is pink.", "It is a big pig!", "The pig is big. It sits.", "The pig digs and digs.", "The pig has a wig! Ha, ha!", "Tim and the pig win!"], "q": [["Who has a big bin?", "who", ["Tim", "Meg", "Pam"], 0], ["What is in the bin?", "what", ["a hen", "a pig", "a cat"], 1], ["What does the pig do?", "what", ["It naps.", "It digs.", "It sits."], 1], ["What does the pig have?", "what", ["a wig", "a hat", "a pen"], 0]], "v": "i", "w": [["big", "큰"], ["pig", "돼지"], ["bin", "통"], ["it", "그것"], ["pink", "분홍색"], ["dig", "파다"], ["sit", "앉다"], ["wig", "가발"], ["win", "이기다"], ["Tim", "팀(이름)"]]}, {"id": "s4", "t": "A Hot Day", "sound": "단모음 o (+a, e, i)", "theme": "날씨 hot · wet", "p": ["It is hot. It is a hot day.", "Tom and his dog sit on a log.", "The dog is hot. Tom is hot.", "Tom gets a pot.", "Tom fills the pot. Fill, fill!", "The dog hops in the pot.", "Hop, hop, pop! It is wet!", "Tom is wet. The dog is wet.", "It is not hot. It is wet!", "Tom and the dog nap on the log."], "q": [["How is the weather?", "how", ["It is hot.", "It is snowy.", "It is windy."], 0], ["Where do Tom and the dog sit?", "where", ["on a bed", "on a log", "in a van"], 1], ["What does Tom get?", "what", ["a pot", "a map", "a net"], 0], ["Who hops in the pot?", "who", ["Tom", "the dog", "a pig"], 1]], "v": "o", "w": [["hot", "더운"], ["dog", "개"], ["log", "통나무"], ["pot", "냄비"], ["hop", "깡충 뛰다"], ["pop", "펑"], ["not", "~아니다"], ["on", "~위에"], ["nap", "낮잠"], ["Tom", "톰(이름)"]]}, {"id": "s5", "t": "Bud's Week", "sound": "단모음 u (+a, e, i, o)", "theme": "요일", "p": ["On Monday, Bud has a bun.", "On Tuesday, Bud runs in the sun.", "On Wednesday, Bud digs in the mud.", "On Thursday, Bud gets in the tub.", "On Friday, Bud hugs his pup.", "On Saturday, Bud has fun on a bus.", "On Sunday, Bud has a nap.", "Was it fun? Yes!", "Bud jumps up. Up, up, up!", "What day is it? It is Monday!"], "q": [["When does Bud dig in the mud?", "when", ["on Monday", "on Wednesday", "on Sunday"], 1], ["What does Bud hug on Friday?", "what", ["his pup", "a bun", "a bus"], 0], ["Where does Bud have fun on Saturday?", "where", ["in the tub", "on a bus", "in the mud"], 1], ["When does Bud have a nap?", "when", ["on Sunday", "on Tuesday", "on Thursday"], 0]], "v": "u", "w": [["bun", "빵"], ["run", "달리다"], ["sun", "해"], ["mud", "진흙"], ["tub", "욕조"], ["hug", "껴안다"], ["pup", "강아지"], ["fun", "재미"], ["bus", "버스"], ["up", "위로"]]}, {"id": "l1", "t": "A Cake for Dave", "sound": "장모음 a_e", "theme": "날씨 · 시간", "long": "a", "p": ["It is a sunny day.", "Kate bakes a cake.", "The cake is on the mat.", "Jake wakes up late.", "Jake runs to the gate.", "Is the cake on the mat? No!", "Dave the dog is at the gate.", "Dave has cake on his lips!", "Kate and Jake make a cake.", "It is a cake for Dave! Ha!"], "q": [["Who bakes a cake?", "who", ["Kate", "Jake", "Dave"], 0], ["When does Jake wake up?", "when", ["late", "on Monday", "at noon"], 0], ["Where is Dave the dog?", "where", ["on the mat", "at the gate", "in a cave"], 1], ["What is on Dave's lips?", "what", ["a cap", "cake", "a hat"], 1]], "w": [["cake", "케이크"], ["bake", "굽다"], ["Kate", "케이트(이름)"], ["wake", "깨다"], ["late", "늦은"], ["gate", "대문"], ["Dave", "데이브(이름)"], ["make", "만들다"], ["Jake", "제이크(이름)"]]}, {"id": "l2", "t": "Mike's Bike", "sound": "장모음 i_e (+a_e)", "theme": "바람 · 날씨", "long": "i", "p": ["Mike has a red bike.", "Mike rides his bike to Jane.", "Jane has a kite.", "The kite is big and fine.", "Jane lets the kite go up.", "The wind is big. Up, up, up!", "The kite is in a pine.", "Mike gets on the bike. Mike rides!", "Mike gets the kite. Yes!", "Mike is in the pine. Jane rides!"], "q": [["What does Mike have?", "what", ["a red bike", "a kite", "a cake"], 0], ["Who has a kite?", "who", ["Mike", "Jane", "Kate"], 1], ["Where is the kite?", "where", ["in a pine", "on a bike", "at the gate"], 0], ["Who rides the bike at the end?", "who", ["Mike", "Jane", "Dave"], 1]], "w": [["bike", "자전거"], ["ride", "타다"], ["kite", "연"], ["Mike", "마이크(이름)"], ["fine", "좋은"], ["pine", "소나무"], ["Jane", "제인(이름)"], ["like", "좋아하다"]]}, {"id": "l3", "t": "A Note for Rose", "sound": "장모음 o_e (+a_e, i_e)", "theme": "바람 부는 날", "long": "o", "p": ["It is a windy day.", "Mole has a note for Rose.", "The wind takes the note!", "The note is on a pole.", "Mole pokes the pole. Poke, poke!", "The note is in a hole.", "Rose pokes her nose in the hole.", "Rose gets the note. It says:", "I like you, Rose!", "Rose has a note on her nose. Ha!"], "q": [["How is the weather?", "how", ["It is windy.", "It is snowy.", "It is hot."], 0], ["What does Mole have?", "what", ["a note", "a kite", "a cake"], 0], ["Where is the note at first?", "where", ["on a pole", "on a bike", "in a box"], 0], ["What does the note say?", "what", ["I like you, Rose!", "Ha, ha!", "Poke, poke!"], 0]], "w": [["note", "쪽지"], ["Rose", "로즈(이름)"], ["Mole", "두더지(이름)"], ["pole", "기둥"], ["poke", "쿡 찌르다"], ["hole", "구멍"], ["nose", "코"], ["windy", "바람 부는"]]}, {"id": "l4", "t": "Luke and the Mule", "sound": "장모음 u_e (+a_e, i_e, o_e)", "theme": "기분 묻기", "long": "u", "p": ["Luke has a mule.", "The mule is cute.", "Luke hums a tune.", "The mule likes the tune.", "June has a cube.", "The mule licks the cube! Lick!", "June is mad. Luke is sad.", "How do you feel, mule?", "The mule hums a tune. Hum, hum!", "June and Luke hum, and we hum!"], "q": [["Who has a mule?", "who", ["Luke", "June", "Rose"], 0], ["What does June have?", "what", ["a cube", "a kite", "a note"], 0], ["How does June feel?", "how", ["mad", "glad", "fine"], 0], ["What does the mule do at the end?", "what", ["It hums a tune.", "It rides a bike.", "It bakes a cake."], 0]], "w": [["mule", "노새"], ["cute", "귀여운"], ["tune", "곡조, 노래"], ["cube", "정육면체, 각설탕"], ["Luke", "루크(이름)"], ["June", "준(이름)"], ["hum", "흥얼거리다"], ["mad", "화난"]]}], PH_WH={"who": ["누가", "사람·동물 이름으로 답해요"], "what": ["무엇을", "물건·하는 일로 답해요"], "where": ["어디에", "장소로 답해요 (in, on, to…)"], "when": ["언제", "때로 답해요 (요일·시간·계절)"], "why": ["왜", "이유로 답해요"], "how": ["어떻게·어떤 기분", "모습·기분으로 답해요"], "how many": ["몇 개", "숫자로 답해요"]};
+var PH={b:null,i:0,step:'read',qi:0,right:0,miss:[],aud:{}};
+function phDone(id){try{return !!localStorage.getItem('ph_'+CUR.name+'_'+id);}catch(e){return false;}}
+function phSay(text){var k=String(text).toLowerCase().replace(/["“”]/g,'').replace(/[^a-z '\-.,!?]/g,' ').replace(/\s+/g,' ').trim().slice(0,39);
+  if(PH.aud[k]&&PH.aud[k]!=='x'){try{PH.aud[k].currentTime=0;PH.aud[k].play();}catch(e){}return;}
+  if(PH.aud[k]==='x'){devSpeak(text);return;}
+  jsonp('tts','&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin+'&word='+encodeURIComponent(k)).then(function(d){
+    if(d&&d.ok&&d.b64){PH.aud[k]=new Audio('data:audio/mpeg;base64,'+d.b64);PH.aud[k].play().catch(function(){});}
+    else{PH.aud[k]='x';devSpeak(text);}}).catch(function(){PH.aud[k]='x';devSpeak(text);});}
+function phHome(){document.getElementById('phList').style.display='';document.getElementById('phView').style.display='none';
+  document.getElementById('phBooks').innerHTML=PH_BOOKS.map(function(b,i){return '<button class="phbook'+(phDone(b.id)?' done':'')+'" onclick="phOpen('+i+')">'+(phDone(b.id)?'✅ ':'📗 ')+(i+1)+'. '+esc(b.t)+'<small>'+esc(b.sound)+' · '+esc(b.theme)+'</small></button>';}).join('');}
+function phColor(t){var b=PH.b;return esc(t).replace(/[A-Za-z]+/g,function(w){
+  if(b.long){var m=w.match(new RegExp('^(.*?)('+b.long+')([bcdfghjklmnpqrstvwxyz])(e)([sd]?)$','i'));
+    if(m)return m[1]+'<b style="color:#1565C0">'+m[2]+'</b>'+m[3]+'<b style="color:#9AA0A6">'+m[4]+'</b>'+m[5];return w;}
+  if(b.v&&/^[A-Za-z]{2,5}$/.test(w)&&!/^(the|one|two|three|four|five|said|are|no|yes|look|see|six|seven|eight|nine|he|she|we|my|what|who|you|to|sunny|rainy|day|today|how|do|feel|was|where|on)$/i.test(w))
+    return w.replace(new RegExp(b.v,'gi'),function(c){return '<b style="color:#C63A26">'+c+'</b>';});return w;});}
+function phOpen(i){PH.b=PH_BOOKS[i];PH.i=0;PH.step='words';PH.wd={};PH.qi=0;PH.right=0;PH.miss=[];
+  document.getElementById('phList').style.display='none';document.getElementById('phView').style.display='';
+  document.getElementById('phTitle').textContent='📗 '+PH.b.t;phRender();window.scrollTo(0,0);}
+function phRender(){var b=PH.b,a=document.getElementById('phArea'),h='';
+  if(PH.step==='words'){var n=Object.keys(PH.wd).length;
+    h='<div class="hint">⓪ 함께 익힐 단어 — 단어를 눌러 듣고 소리 내어 따라 읽어요 ('+n+' / '+b.w.length+')</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">'
+     +b.w.map(function(x,j){return '<button class="phbook'+(PH.wd[j]?' done':'')+'" style="text-align:center;font-size:26px;margin:0" onclick="PH.wd['+j+']=1;phSay(\''+x[0]+'\');phRender()">'+phColor(x[0])+'<small>'+esc(x[1])+'</small></button>';}).join('')+'</div>'
+     +(n>=b.w.length?'<div class="phnav"><button class="btn btn-go" onclick="PH.step=\'read\';phRender()">단어 다 읽었어요! 책 읽기 →</button></div>':'<div class="hint">단어를 모두 눌러 들어야 책이 열려요.</div>');
+    a.innerHTML=h;return;}
+  if(PH.step==='read'){var s=b.p[PH.i];
+    h='<div class="hint">① 듣고 따라 읽기 — '+(PH.i+1)+' / '+b.p.length+'쪽 · 🔊 누르고 소리 내어 따라 읽어요</div><div class="phpage">'+phColor(s)+'</div>'
+     +'<div class="phnav"><button class="btn btn-audio" onclick="phSay(PH.b.p[PH.i])">🔊 듣기</button>'
+     +(PH.i>0?'<button class="btn btn-ghost" onclick="PH.i--;phRender()">← 앞</button>':'')
+     +'<button class="btn btn-go" onclick="phNext()">'+(PH.i<b.p.length-1?'따라 읽었어요 →':'다 읽었어요! 질문으로 →')+'</button></div>';
+    a.innerHTML=h;setTimeout(function(){phSay(s);},150);return;}
+  if(PH.step==='q'){var q=b.q[PH.qi],wh=PH_WH[q[1]];
+    var qs=esc(q[0]).replace(new RegExp('^('+q[1].replace(' ','\\s')+')','i'),'<span class="whw">$1</span>');
+    h='<div class="hint">② 질문에 대답하기 — '+(PH.qi+1)+' / '+b.q.length+'</div><div class="phq">'+qs+' <button class="btn btn-audio" style="padding:4px 10px" onclick="phSay(PH.b.q[PH.qi][0])">🔊</button></div>';
+    if(!PH.whOk){var keys=['who','what','where','when','why','how','how many'];
+      h+='<div class="hint">먼저! 빨간 단어는 무엇을 묻나요?</div>'+keys.map(function(k){return '<span class="whchip" onclick="phWh(this,\''+k+'\')">'+PH_WH[k][0]+'</span>';}).join('');}
+    else h+='<div class="hint">'+esc(q[1])+' = <b>'+esc(wh[0])+'</b> — '+esc(wh[1])+'</div>'+q[2].map(function(o,j){return '<span class="whchip" onclick="phAns(this,'+j+')">'+esc(o)+'</span>';}).join('');
+    h+='<div class="msg" id="phMsg"></div>';a.innerHTML=h;if(PH.qi===0&&!PH.whOk&&!PH._said){PH._said=1;setTimeout(function(){phSay(q[0]);},150);}return;}
+  if(PH.step==='diary'){var D=PH.dy||(PH.dy={day:'',wea:'',feel:''});
+    var days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],weas=['sunny','rainy','windy','snowy','cloudy'],feels=['happy','glad','sad','sleepy','tired','hungry'];
+    var row=function(arr,key){return arr.map(function(x){return '<span class="whchip'+(D[key]===x?' ok':'')+'" onclick="PH.dy.'+key+'=\''+x+'\';phRender()">'+x+'</span>';}).join('');};
+    var sent='Today is '+(D.day||'____')+'. It is '+(D.wea||'____')+'. I feel '+(D.feel||'____')+'.';
+    h='<div class="hint">③ 오늘의 일기 — 골라서 문장을 완성하고, 듣고 따라 말해요. 종이에도 똑같이 써요!</div>'
+     +'<div class="hint">What day is it?</div>'+row(days,'day')+'<div class="hint">How\'s the weather?</div>'+row(weas,'wea')+'<div class="hint">How do you feel?</div>'+row(feels,'feel')
+     +'<div class="phdiary">'+esc(sent)+'</div>'
+     +(D.day&&D.wea&&D.feel?'<div class="phnav"><button class="btn btn-audio" onclick="phSay(\'Today is '+D.day+'.\');setTimeout(function(){phSay(\'It is '+D.wea+'. I feel '+D.feel+'.\')},1600)">🔊 듣기</button><button class="btn btn-go" onclick="phFinish()">다 했어요 🎉</button></div>':'');
+    a.innerHTML=h;return;}
+  if(PH.step==='end'){a.innerHTML='<div class="fixdone">🎉 「'+esc(b.t)+'」 끝!<br>질문 '+PH.right+' / '+b.q.length+' 한 번에 맞혔어요.<br>종이 독서기록에 제목·날짜·재미있었던 그림·모르는 단어를 써요.</div>';}
+}
+function phNext(){if(PH.i<PH.b.p.length-1){PH.i++;}else{PH.step='q';PH.qi=0;PH.whOk=false;PH._said=0;PH.first=true;}phRender();}
+function phWh(el,k){var q=PH.b.q[PH.qi],m=document.getElementById('phMsg');
+  if(k===q[1]){el.classList.add('ok');PH.whOk=true;setTimeout(phRender,600);}
+  else{el.classList.add('no');m.className='msg';m.textContent='아니에요. '+q[1]+'는 "'+PH_WH[q[1]][0]+'"예요. 다시 골라 봐요!';PH.first=false;setTimeout(function(){el.classList.remove('no');},1200);}}
+function phAns(el,j){var q=PH.b.q[PH.qi],m=document.getElementById('phMsg');
+  if(j===q[3]){el.classList.add('ok');if(PH.first)PH.right++;else PH.miss.push(q[0]);phSay(q[2][j]);
+    setTimeout(function(){PH.qi++;PH.whOk=false;PH.first=true;if(PH.qi>=PH.b.q.length)PH.step='diary';phRender();if(PH.step==='q')phSay(PH.b.q[PH.qi][0]);},1300);}
+  else{el.classList.add('no');PH.first=false;m.className='msg';m.textContent='다시! 책에서 찾아봐요. 질문을 한 번 더 들어 봐요 🔊';setTimeout(function(){el.classList.remove('no');},1200);}}
+function phFinish(){try{localStorage.setItem('ph_'+CUR.name+'_'+PH.b.id,new Date().toISOString().slice(0,10));}catch(e){}
+  jsonp('wordSave','&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin+'&series='+encodeURIComponent('파닉스 리더스')+'&title='+encodeURIComponent(PH.b.t+' (의문사 질문)')
+    +'&right='+PH.right+'&total='+PH.b.q.length+'&missed='+encodeURIComponent(PH.miss.join(' / '))).catch(function(){});
+  PH.step='end';party(60);phRender();}
+
+/* v8: 정독하기 — 빙고판 다음, 퀴즈 채점 앞. 1회독(책+음원) → 2회독(음원만) → 퀴즈 */
+var RD={k:null};
+function rdKey(){return 'rd_'+CUR.name+'_'+(RD.k?RD.k.series+'|'+RD.k.title:'');}
+function rdState(){try{return JSON.parse(localStorage.getItem(rdKey())||'{}');}catch(e){return {};}}
+function rdSave(o){try{localStorage.setItem(rdKey(),JSON.stringify(o));}catch(e){}}
+function rdFind(s,t){for(var i=0;i<KEYS.length;i++)if(bgSer(KEYS[i].series)===bgSer(s)&&bgSame(KEYS[i].title,t))return KEYS[i];
+  for(var j=0;j<KEYS.length;j++)if(bgSame(KEYS[j].title,t))return KEYS[j];return null;}
+function rdBtn(k,i){return '<button class="todo" onclick="rdOpen('+i+')">'+(k.audio?'🎧 ':'📖 ')+esc(k.title)+' <small>'+esc(bgSer(k.series))+'</small></button>';}
+function readHome(){
+  document.getElementById('rdPick').style.display='';document.getElementById('rdView').style.display='none';
+  var box=document.getElementById('rdPicks');
+  var draw=function(){var ps=(BG.picks||[]).map(function(p){var k=rdFind(p.s,p.t);return k&&!bgDone(k.title)?k:null;}).filter(Boolean);
+    box.innerHTML=ps.length?'<div class="hint" style="margin:0 0 6px">⭐ 빙고판에서 고른 책</div>'+ps.map(function(k){return rdBtn(k,KEYS.indexOf(k));}).join(''):'<div class="hint">빙고판에서 다음 책을 ★로 고르면 여기에 나와요.</div>';};
+  if(BG.loaded&&BG.name===CUR.name)draw();else{box.innerHTML='<div class="hint">⏳ 빙고판에서 고른 책을 불러오는 중…</div>';bgLoad().then(draw).catch(function(){box.innerHTML='';});}
+  rdList();}
+function rdList(){var q=(document.getElementById('rdSearch').value||'').trim().toLowerCase(),el=document.getElementById('rdList');
+  if(q.length<2){el.innerHTML='';return;}
+  var out=[];KEYS.forEach(function(k,i){if(out.length<20&&(k.title+' '+k.series).toLowerCase().indexOf(q)>=0)out.push(rdBtn(k,i));});
+  el.innerHTML=out.length?out.join(''):'<div class="hint">찾는 책이 없어요. 선생님께 물어보세요.</div>';}
+function rdOpen(i){RD.k=KEYS[i];document.getElementById('rdPick').style.display='none';document.getElementById('rdView').style.display='';
+  document.getElementById('rdTitle').textContent='📖 '+RD.k.title;
+  var u=RD.k.audio,a=document.getElementById('rdAudio');
+  if(u&&/\.(mp3|m4a|mp4|wav|ogg)(\?|$)/i.test(u))a.innerHTML='<audio controls preload="none" style="width:100%;margin:6px 0 10px" src="'+esc(u)+'"></audio>';
+  else if(u)a.innerHTML='<a class="btn btn-audio" href="'+esc(u)+'" target="_blank" rel="noopener">🎧 음원 듣기</a>';
+  else a.innerHTML='<div class="hint">이 책은 음원이 아직 없어요. 소리 내어 읽으며 1회독, 한 번 더 읽으며 2회독 해요.</div>';
+  rdRender();window.scrollTo(0,0);}
+function rdRender(){var st=rdState(),h='';
+  h+='<div class="rdstep">① 책을 보면서 음원을 듣고 읽기 (1회독) '+(st.r1?'✅':'')+'</div>';
+  if(!st.r1)h+='<div class="center"><button class="btn btn-go" onclick="rdDone(1)">1회독 다 했어요</button></div>';
+  else{h+='<div class="rdstep">② 책을 덮고 음원만 들으며 장면 떠올리기 (2회독) '+(st.r2?'✅':'')+'</div>';
+    if(!st.r2)h+='<div class="center"><button class="btn btn-go" onclick="rdDone(2)">2회독 다 했어요</button></div>';
+    else h+='<div class="fixdone">🎉 두 번 다 읽었어요! 이제 종이 퀴즈북을 풀고 채점해요.</div><div class="center" style="margin-top:10px"><button class="btn btn-go" onclick="go(\'grade\')">📚 퀴즈 채점하러 가기</button></div>';}
+  document.getElementById('rdSteps').innerHTML=h;}
+function rdDone(n){var st=rdState();st['r'+n]=new Date().toISOString().slice(0,10);rdSave(st);if(n===2)party(40);rdRender();}
+function rdBack(){readHome();}
+</script>
 </body>
 </html>
