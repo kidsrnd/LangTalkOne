@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>낭독원 원서 사이트 v28</title>
+<title>낭독원 원서 사이트 v29</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Lora:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -340,8 +340,8 @@ details.admin summary::-webkit-details-marker{display:none}
 .bsufo b{background:#FFF8D6;border:2px solid #B7791F;border-radius:9px;padding:3px 4px;font-size:15px;color:#3b2a00;line-height:1.2;word-break:keep-all;max-width:100%}
 .bsufo.fall{animation:bsFall 11s linear forwards}@keyframes bsFall{to{top:300px}}
 .bsufo.boom{animation:bsBoom .5s forwards}@keyframes bsBoom{to{transform:scale(1.8);opacity:0}}.bsufo.wrong b{background:#C63A26;color:#fff;border-color:#C63A26}
-.bsplane{position:absolute;bottom:8px;left:12.5%;transform:translateX(-50%) rotate(-45deg);font-size:38px;transition:left .15s;z-index:3;pointer-events:none}
-.bsshot{position:absolute;bottom:50px;width:6px;height:0;margin-left:-3px;background:#FFE27A;border-radius:3px;box-shadow:0 0 10px #FFE27A;pointer-events:none}.bsshot.go{animation:bsShot .3s ease-out}@keyframes bsShot{0%{height:30px;bottom:50px;opacity:1}100%{height:30px;bottom:300px;opacity:0}}
+.bsplane{position:absolute;bottom:6px;left:12.5%;transform:translateX(-50%);width:64px;height:72px;transition:left .15s;z-index:3;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}.bsplane svg{width:100%;height:100%;display:block}.bsplane .fl{transform-origin:50% 0;animation:jetFl .12s infinite alternate}@keyframes jetFl{from{transform:scaleY(.7);opacity:.75}to{transform:scaleY(1.15);opacity:1}}.bsplane.fire{animation:jetKick .18s}@keyframes jetKick{0%{margin-bottom:0}40%{margin-bottom:-7px}100%{margin-bottom:0}}
+.bsshot{position:absolute;bottom:74px;width:6px;height:0;margin-left:-3px;background:#FFE27A;border-radius:3px;box-shadow:0 0 10px #FFE27A;pointer-events:none}.bsshot.go{animation:bsShot .3s ease-out}@keyframes bsShot{0%{height:30px;bottom:74px;opacity:1}100%{height:30px;bottom:300px;opacity:0}}
 .wgmiss{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-top:10px}.wgmiss div{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font-size:15px}.wgmiss b{display:block;color:#1B3A6B;font-size:18px}.wgmiss span{color:#3E4759}
 .audframe{width:100%;height:64px;border:0;border-radius:12px;margin:6px 0 10px;background:#F1F4F9}
 .frobj{position:absolute;z-index:4;line-height:1}
@@ -1725,42 +1725,59 @@ function wgToRead(){wgStop();var i=KEYS.indexOf(WD.key);go('read');if(i>=0)rdOpe
 function wgOthers(w,n,byWord){var seen={},out=[];shuf(WD.words.slice()).forEach(function(x){var k=byWord?x.w:x.m;if(x.m===w.m||x.w===w.w||seen[k]||out.length>=n)return;seen[k]=1;out.push(x);});return out;}
 
 /* ② 두더지 — 간판의 뜻에 맞는 영어 단어 두더지를 잡아요. 단어가 모두 한 번씩 나와요 */
-function wgMole(){
-  wgStop();var tok=WG.tok,q=shuf(WD.words.slice()),total=q.length,hit=0,wrong=0,cur=null,again={};
+/* v29: 게임 효과음 — 🔊 버튼이 켜져 있을 때만 */
+function sfx(k){if(!chOn())return;try{var ac=chAC();if(!ac)return;var t=ac.currentTime+0.01;
+  var sweep=function(f1,f2,d,type,vol){var o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+d);
+    g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+0.03);};
+  if(k==='pop')sweep(260,620,0.09,'sine',0.12);
+  else if(k==='hit'){sweep(520,180,0.12,'square',0.14);chDrum(ac,t,0.3);chTone(ac,1047,t+0.08,0.14,'triangle',0.12);}
+  else if(k==='bad'){sweep(180,90,0.28,'sawtooth',0.13);}
+  else if(k==='shot'){sweep(1500,240,0.2,'sawtooth',0.1);}
+  else if(k==='boom'){chDrum(ac,t,0.5);chDrum(ac,t+0.06,0.4);sweep(160,40,0.35,'triangle',0.2);}
+  else if(k==='alarm'){chTone(ac,440,t,0.12,'square',0.1);chTone(ac,330,t+0.14,0.2,'square',0.1);}
+  else if(k==='go'){chTone(ac,523,t,0.1,'square',0.1);chTone(ac,659,t+0.1,0.1,'square',0.1);chTone(ac,784,t+0.2,0.18,'square',0.1);}
+}catch(e){}}
+var JETSVG='<svg viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg"><g class="fl"><path d="M27 60 L32 72 L37 60 Z" fill="#FFB020"/><path d="M29.5 60 L32 67 L34.5 60 Z" fill="#FFF3B0"/></g><path d="M32 2 L37 20 L38 44 L62 58 L62 62 L38 56 L37 60 L44 66 L44 69 L32 66 L20 69 L20 66 L27 60 L26 56 L2 62 L2 58 L26 44 L27 20 Z" fill="#8E9AAF" stroke="#1F2430" stroke-width="1.6" stroke-linejoin="round"/><path d="M32 4 L35.5 20 L35.5 58 L28.5 58 L28.5 20 Z" fill="#C9D1DE"/><path d="M32 12 L34.5 22 L34.5 30 L29.5 30 L29.5 22 Z" fill="#2B5A9B" stroke="#1F2430" stroke-width="1"/><path d="M8 57.5 L24 48 L24 53 Z M56 57.5 L40 48 L40 53 Z" fill="#C63A26"/><rect x="12" y="52" width="3" height="9" rx="1.5" fill="#1F2430"/><rect x="49" y="52" width="3" height="9" rx="1.5" fill="#1F2430"/></svg>';
+function wgMole(){   /* v29: 그 책 단어 중 아무거나 10문제 — 첫 터치에 맞힌 것만 점수, 75% 이상이어야 보스전 */
+  wgStop();var tok=WG.tok,q=shuf(WD.words.slice()).slice(0,10),total=q.length,hit=0,wrong=0,cur=null;sfx('go');
   document.getElementById('wdProg').innerHTML=wgSteps(1);
-  var h='<div class="wghud"><span>남은 단어 <b id="mgLeft"></b></span><span>잡았다 <b id="mgHit">0</b></span><span>실수 <b id="mgBad">0</b></span></div><div class="mgsign" id="mgSign">준비!</div><div class="mgfield">';
+  var h='<div class="wghud"><span>문제 <b id="mgLeft"></b></span><span>잡았다 <b id="mgHit">0</b></span><span>실수 <b id="mgBad">0</b></span></div><div class="mgsign" id="mgSign">준비!</div><div class="mgfield">';
   for(var i=0;i<9;i++)h+='<button class="mghole" data-i="'+i+'"><span class="mgmole"><em>🐹</em><b></b></span></button>';
-  wgArea().innerHTML=h+'</div><div class="hint center">간판의 뜻과 같은 영어 단어 두더지만 톡!</div><div class="fixmsg" id="mgMsg"></div>';
+  wgArea().innerHTML=h+'</div><div class="hint center">간판의 뜻과 같은 영어 단어 두더지만 톡! 한 번에 맞혀야 점수예요 · 75% 넘으면 보스전</div><div class="fixmsg" id="mgMsg"></div>';
   var holes=[].slice.call(wgArea().querySelectorAll('.mghole'));
   var pop=function(){if(tok!==WG.tok||!cur)return;var pos=shuf([0,1,2,3,4,5,6,7,8]).slice(0,4),ws=shuf([cur].concat(wgOthers(cur,3,true)));
     holes.forEach(function(b){b.className='mghole';b.dataset.w='';});
-    pos.forEach(function(p,j){if(!ws[j])return;var b=holes[p];b.dataset.w=ws[j].w;b.querySelector('b').textContent=ws[j].w;b.className='mghole up';});};
+    pos.forEach(function(p,j){if(!ws[j])return;var b=holes[p];b.dataset.w=ws[j].w;b.querySelector('b').textContent=ws[j].w;b.className='mghole up';});sfx('pop');};
   var next=function(){if(tok!==WG.tok)return;clearInterval(WG.iv);
-    if(!q.length){var acc=Math.round(hit/Math.max(1,hit+wrong)*100);document.getElementById('wdProg').innerHTML=wgSteps(2);
-      wgArea().innerHTML='<div class="result-big"><div class="pct">'+acc+'%</div><div class="sub">두더지 '+hit+'마리 · 실수 '+wrong+'번</div></div><div class="fixdone">🐹 두더지를 다 잡았어요!<br>이제 비행기 보스전이에요 ✈️</div><div class="center" style="margin-top:14px"><button class="btn btn-ghost" onclick="wgMole()">한 번 더</button> <button class="btn btn-go" onclick="wgBoss()">✈️ 보스전 출격!</button></div>';party(40);return;}
-    cur=q.shift();document.getElementById('mgSign').textContent=cur.m;document.getElementById('mgLeft').textContent=q.length+1;pop();WG.iv=setInterval(pop,2200);};
+    if(!q.length){var acc=Math.round(hit/Math.max(1,total)*100),pass=acc>=75;document.getElementById('wdProg').innerHTML=wgSteps(pass?2:1);
+      wgArea().innerHTML='<div class="result-big"><div class="pct">'+acc+'%</div><div class="sub">'+total+'문제 중 '+hit+'마리를 한 번에 잡았어요</div></div>'
+        +(pass?'<div class="fixdone">🐹 두더지 통과!<br>이제 전투기 보스전이에요 🚀</div><div class="center" style="margin-top:14px"><button class="btn btn-ghost" onclick="wgMole()">한 번 더</button> <button class="btn btn-go" onclick="wgBoss()">🚀 보스전 출격!</button></div>'
+          :'<div class="fixmsg fixno">75%가 넘어야 보스전이 열려요. 한 번 더 해 봐요!</div><div class="center" style="margin-top:14px"><button class="btn btn-go" onclick="wgMole()">🐹 다시 도전</button></div>');
+      if(pass)party(40);else sfx('alarm');return;}
+    cur=q.shift();document.getElementById('mgSign').textContent=cur.m;document.getElementById('mgLeft').textContent=(total-q.length)+' / '+total;pop();WG.iv=setInterval(pop,2200);};
   holes.forEach(function(b){b.onclick=function(){if(tok!==WG.tok||!cur||!b.dataset.w||b.className.indexOf('up')<0)return;
-    if(b.dataset.w===cur.w){hit++;document.getElementById('mgHit').textContent=hit;b.className='mghole up good';try{speak(cur.w);}catch(e){}document.getElementById('mgMsg').textContent='';var c=cur;cur=null;clearInterval(WG.iv);WG.to=setTimeout(next,650);}
-    else{wrong++;document.getElementById('mgBad').textContent=wrong;b.className='mghole up bad';var x=WD.words.filter(function(y){return y.w===b.dataset.w;})[0];
-      var m=document.getElementById('mgMsg');m.className='fixmsg fixno';m.innerHTML='<b>'+esc(b.dataset.w)+'</b> = '+esc(x?x.m:'');if(!again[cur.w]){again[cur.w]=1;q.push(cur);}}};});
+    if(b.dataset.w===cur.w){hit++;document.getElementById('mgHit').textContent=hit;b.className='mghole up good';sfx('hit');try{speak(cur.w);}catch(e){}document.getElementById('mgMsg').textContent='';cur=null;clearInterval(WG.iv);WG.to=setTimeout(next,650);}
+    else{wrong++;document.getElementById('mgBad').textContent=wrong;b.className='mghole up bad';sfx('bad');var x=WD.words.filter(function(y){return y.w===b.dataset.w;})[0];
+      var m=document.getElementById('mgMsg');m.className='fixmsg fixno';m.innerHTML='<b>'+esc(b.dataset.w)+'</b> = '+esc(x?x.m:'')+' · 정답은 <b>'+esc(cur.w)+'</b>';
+      holes.forEach(function(h2){if(h2.dataset.w===cur.w)h2.className='mghole up good';});cur=null;clearInterval(WG.iv);WG.to=setTimeout(next,1500);}};});
   next();
 }
 
-/* ③ 비행기 보스전 — 정답 UFO가 있는 줄을 눌러 발사! ★ 단어 먼저 10문제, 목숨 3개 */
+/* ③ 전투기 보스전 (v29: 전투기 그림 + 효과음) — 정답 UFO가 있는 줄을 눌러 발사! ★ 단어 먼저 10문제, 목숨 3개 */
 function wgBoss(){
   wgStop();var tok=WG.tok,ws=WD.words.filter(function(w){return w.s;}).concat(shuf(WD.words.filter(function(w){return !w.s;}))).slice(0,10);
   var qs=shuf(ws).map(function(w,i){return {w:w,en:i%2===0};}),hp=qs.length,max=hp,life=3,cur=null,busy=false,again={};
   document.getElementById('wdProg').innerHTML=wgSteps(2);
   wgArea().innerHTML='<div class="wghud"><span id="bsLife"></span><span>보스 <b id="bsHp"></b></span></div><div class="bssky" id="bsSky"><div class="bsstars"></div><div class="bsboss" id="bsBoss">👾<i><u id="bsBar"></u></i></div><div class="bsq" id="bsQ"></div>'
     +[0,1,2,3].map(function(l){return '<button class="bslane" data-l="'+l+'" style="left:'+(l*25)+'%"><span class="bsufo"><em>🛸</em><b></b></span></button>';}).join('')
-    +'<div class="bsplane" id="bsPlane">✈️</div><div class="bsshot" id="bsShot"></div></div><div class="hint center">정답 UFO가 있는 줄을 눌러 발사!</div><div class="fixmsg" id="bsMsg"></div>';
+    +'<div class="bsplane" id="bsPlane">'+JETSVG+'</div><div class="bsshot" id="bsShot"></div></div><div class="hint center">정답 UFO가 있는 줄을 눌러 발사!</div><div class="fixmsg" id="bsMsg"></div>';
   var lanes=[].slice.call(wgArea().querySelectorAll('.bslane')),sky=document.getElementById('bsSky');
   var upd=function(){document.getElementById('bsLife').textContent='❤️'.repeat(life)+'🤍'.repeat(3-life);document.getElementById('bsHp').textContent=hp+' / '+max;document.getElementById('bsBar').style.width=(hp/max*100)+'%';};
   var end=function(win){wgStop();document.getElementById('wdProg').innerHTML=wgSteps(win?3:2);
     wgArea().innerHTML=win?'<div class="result-big"><div class="pct">🏆</div><div class="sub">보스를 물리쳤어요! 남은 목숨 '+life+'개</div></div><div class="fixdone">마지막이에요 — 단어 테스트!<br><b>75% 이상</b> 맞히면 책을 읽으러 가요 📖</div><div class="center" style="margin-top:14px"><button class="btn btn-go" onclick="wgTest()">📝 단어 테스트 시작</button></div>'
-      :'<div class="result-big"><div class="pct">💥</div><div class="sub">목숨을 다 썼어요</div></div><div class="fixmsg fixno">괜찮아요! 틀린 단어를 떠올리고 다시 도전해요.</div><div class="center" style="margin-top:14px"><button class="btn btn-ghost" onclick="wgMole()">🐹 두더지부터 다시</button> <button class="btn btn-go" onclick="wgBoss()">✈️ 다시 도전</button></div>';
+      :'<div class="result-big"><div class="pct">💥</div><div class="sub">목숨을 다 썼어요</div></div><div class="fixmsg fixno">괜찮아요! 틀린 단어를 떠올리고 다시 도전해요.</div><div class="center" style="margin-top:14px"><button class="btn btn-ghost" onclick="wgMole()">🐹 두더지부터 다시</button> <button class="btn btn-go" onclick="wgBoss()">🚀 다시 도전</button></div>';
     if(win)party(90);};
-  var miss=function(msg){life--;upd();var m=document.getElementById('bsMsg');m.className='fixmsg fixno';m.innerHTML=msg+' → <b>'+esc(cur.w.w)+'</b> = '+esc(cur.w.m);
+  var miss=function(msg){life--;upd();sfx('alarm');var m=document.getElementById('bsMsg');m.className='fixmsg fixno';m.innerHTML=msg+' → <b>'+esc(cur.w.w)+'</b> = '+esc(cur.w.m);
     if(!again[cur.w.w]){again[cur.w.w]=1;qs.push({w:cur.w,en:!cur.en});}
     if(life<=0){WG.to=setTimeout(function(){end(false);},1400);return;}WG.to=setTimeout(next,1700);};
   var next=function(){if(tok!==WG.tok)return;busy=false;clearTimeout(WG.to);
@@ -1772,12 +1789,12 @@ function wgBoss(){
       b.querySelector('b').textContent=o?(cur.en?o.m:o.w):'';u.className='bsufo';void u.offsetWidth;u.className='bsufo fall';});
     WG.to=setTimeout(function(){if(tok!==WG.tok||busy)return;busy=true;miss('⏰ 시간 초과');},11000);};
   lanes.forEach(function(b){b.onclick=function(){if(tok!==WG.tok||busy||!cur)return;busy=true;clearTimeout(WG.to);
-    var l=+b.dataset.l;document.getElementById('bsPlane').style.left=(l*25+12.5)+'%';var s=document.getElementById('bsShot');s.style.left=(l*25+12.5)+'%';s.className='bsshot';void s.offsetWidth;s.className='bsshot go';
+    var l=+b.dataset.l;document.getElementById('bsPlane').style.left=(l*25+12.5)+'%';var s=document.getElementById('bsShot');s.style.left=(l*25+12.5)+'%';s.className='bsshot';void s.offsetWidth;s.className='bsshot go';sfx('shot');var pl=document.getElementById('bsPlane');pl.classList.remove('fire');void pl.offsetWidth;pl.classList.add('fire');
     lanes.forEach(function(x){x.querySelector('.bsufo').style.animationPlayState='paused';});
-    if(b.dataset.ok){b.querySelector('.bsufo').className='bsufo boom';hp--;upd();document.getElementById('bsMsg').textContent='';var bo=document.getElementById('bsBoss');bo.className='bsboss hit';setTimeout(function(){bo.className='bsboss';},350);WG.to=setTimeout(next,800);}
+    if(b.dataset.ok){b.querySelector('.bsufo').className='bsufo boom';setTimeout(function(){sfx('boom');},140);hp--;upd();document.getElementById('bsMsg').textContent='';var bo=document.getElementById('bsBoss');bo.className='bsboss hit';setTimeout(function(){bo.className='bsboss';},350);WG.to=setTimeout(next,800);}
     else{b.querySelector('.bsufo').className='bsufo wrong';miss('✗');}
     lanes.forEach(function(x){x.querySelector('.bsufo').style.animationPlayState='';});};});
-  upd();next();
+  sfx('go');upd();next();
 }
 
 /* ④ 단어 테스트 — 단어 전부, 영어를 보고 뜻 고르기. 75% 이상이면 책 읽기로 */
@@ -1871,7 +1888,7 @@ function wdFinish(){
   var miss=Object.keys(WD.missed);
   document.getElementById('wdProg').innerHTML=wgSteps(1);
   document.getElementById('wdArea').innerHTML='<div class="result-big"><div class="pct">'+right+' / '+total+'</div><div class="sub">처음에 바로 맞힌 단어</div></div>'
-    +'<div class="fixdone">🎉 단어 '+total+'개를 모두 익혔어요!'+(miss.length?'<br><small>다시 본 단어: '+esc(miss.join(', '))+'</small>':'<br>한 번도 안 틀렸어요!')+'<br>이제 게임으로 한 번 더! 🐹 두더지 → ✈️ 보스전 → 📝 테스트</div>'
+    +'<div class="fixdone">🎉 단어 '+total+'개를 모두 익혔어요!'+(miss.length?'<br><small>다시 본 단어: '+esc(miss.join(', '))+'</small>':'<br>한 번도 안 틀렸어요!')+'<br>이제 게임으로 한 번 더! 🐹 두더지 → 🚀 보스전 → 📝 테스트</div>'
     +'<div class="center" style="margin-top:14px"><button class="btn btn-go" onclick="wgMole()">🐹 두더지 게임 시작</button></div>';
   party(miss.length?40:90);
   jsonp('wordSave','&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin+'&series='+encodeURIComponent(WD.key.series)+'&title='+encodeURIComponent(WD.key.title)
