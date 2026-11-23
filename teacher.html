@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>낭독원 선생님 사이트 v3</title>
+<style>
+:root{--navy:#1B3A6B;--red:#C63A26;--ink:#1F2430;--mid:#3E4759;--line:#D5DCE8;--bg:#F5F1EA;--green:#2C7A4B;--gold:#B7791F}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans KR","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16px}
+header{background:var(--navy);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+header h1{font-size:19px;margin:0;font-weight:900}
+header nav{display:flex;gap:4px;flex-wrap:wrap}
+header nav button{background:none;border:0;color:#fff;font-size:16px;font-weight:700;padding:8px 12px;border-bottom:3px solid transparent;cursor:pointer}
+header nav button.on{border-bottom-color:var(--red)}
+header .sp{flex:1}
+header .rf{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 12px;font-weight:800;cursor:pointer}
+main{max-width:1180px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(20,30,50,.08)}
+.card h2{margin:0 0 10px;font-size:18px;color:var(--navy)}
+.hint{color:var(--mid);font-size:14px;margin:4px 0 10px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{background:#EEF2F8;color:var(--navy);text-align:left;padding:8px;position:sticky;top:58px}
+td{padding:7px 8px;border-bottom:1px solid #EDF0F5;vertical-align:middle}
+tr:hover td{background:#FAFBFD}
+.num{text-align:right;font-weight:800}
+.s100{color:var(--green)}.slow{color:var(--red)}
+.chip{display:inline-block;border-radius:999px;padding:2px 9px;font-size:13px;font-weight:800;margin:1px 2px;background:#EEF2F8;color:var(--navy)}
+.chip.r{background:#FBEAE6;color:var(--red)}.chip.g{background:#EAF6EE;color:var(--green)}.chip.y{background:#FFF4D6;color:var(--gold)}
+.btn{border:1.5px solid var(--line);background:#fff;color:var(--navy);border-radius:8px;padding:6px 10px;font-weight:800;cursor:pointer;font-size:14px}
+.btn.go{background:var(--navy);color:#fff;border-color:var(--navy)}.btn.del{color:var(--red);border-color:#F0C4BC}
+.btn:disabled{opacity:.5}
+input,select{font-size:16px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{border-radius:12px;padding:12px 14px;color:#fff}
+.kpi b{display:block;font-size:30px;line-height:1.1}.kpi span{font-size:14px;font-weight:700}
+.k1{background:var(--navy)}.k2{background:var(--green)}.k3{background:var(--red)}.k4{background:var(--gold)}
+#login{max-width:380px;margin:12vh auto;text-align:center}
+#login input{width:100%;margin:10px 0;text-align:center;font-size:20px}
+.msg{font-weight:800;margin:8px 0}.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+.star{cursor:pointer;font-size:20px;background:none;border:0}
+.mono{font-family:Consolas,monospace;letter-spacing:2px;font-size:17px}
+audio,video{max-width:260px;height:36px}video{height:auto}
+@media(max-width:700px){th{position:static}table{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="login" class="card">
+  <h2>👩‍🏫 낭독원 선생님 사이트</h2>
+  <div class="hint">선생님 비밀번호를 넣어 주세요. (이 컴퓨터 창을 닫으면 다시 물어봐요)</div>
+  <input type="password" id="pw" placeholder="비밀번호" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+  <button class="btn go" style="width:100%;padding:12px;font-size:17px" onclick="doLogin()">들어가기</button>
+  <div class="msg err" id="loginMsg"></div>
+</div>
+
+<div id="app" style="display:none">
+<header>
+  <h1>낭독원 × 리딩오션 · 선생님</h1>
+  <nav id="nav">
+    <button data-t="today" class="on" onclick="tab('today')">한눈에 보기</button>
+    <button data-t="student" onclick="tab('student')">학생별</button>
+    <button data-t="keys" onclick="tab('keys')">정답 · 다시 채점</button>
+    <button data-t="media" onclick="tab('media')">녹음 · 영상</button>
+    <button data-t="battle" onclick="tab('battle')">⚔️ 보카 배틀</button>
+    <button data-t="pins" onclick="tab('pins')">학생 관리</button>
+  </nav>
+  <span class="sp"></span>
+  <span id="stamp" style="font-size:13px"></span>
+  <button class="rf" onclick="load()">↻ 새로고침</button>
+</header>
+<main id="main"></main>
+</div>
+
+<script>
+var WEBAPP='https://script.google.com/macros/s/AKfycbwzFxfCm_0Nak6JfV5JISjTx5Wc3Q-AuWFCdd21Z0MFBY8ZB5OKbyHF8T0xjNTjsA4b/exec';
+var TK='',D=null,TAB='today',SEL='',DAY='';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function jsonp(action,extra){return new Promise(function(res,rej){
+  var cb='cb'+Math.random().toString(36).slice(2),done=false,s=document.createElement('script');
+  window[cb]=function(d){done=true;s.remove();delete window[cb];res(d);};
+  s.src=WEBAPP+'?token='+encodeURIComponent(TK)+'&action='+action+(extra||'')+'&callback='+cb;
+  s.onerror=function(){s.remove();rej('network');};document.body.appendChild(s);
+  setTimeout(function(){if(!done)rej('timeout');},90000);});}
+function q(o){return Object.keys(o).map(function(k){return '&'+k+'='+encodeURIComponent(o[k]);}).join('');}
+function doLogin(){
+  TK=document.getElementById('pw').value.trim();var m=document.getElementById('loginMsg');
+  if(!TK){m.textContent='비밀번호를 넣어 주세요.';return;}
+  m.className='msg';m.textContent='⏳ 불러오는 중… (10~20초)';
+  jsonp('tDash','&days=14').then(function(d){
+    if(!d||!d.ok){m.className='msg err';m.textContent=d&&d.error==='bad token'?'비밀번호가 맞지 않아요.':((d&&d.error)||'들어가지 못했어요. 서버가 v43인지 확인해 주세요.');TK='';return;}
+    try{sessionStorage.setItem('ttk',TK);}catch(e){}
+    D=d;DAY=d.today;document.getElementById('login').style.display='none';document.getElementById('app').style.display='';render();
+  }).catch(function(){m.className='msg err';m.textContent='인터넷 연결을 확인해 주세요.';TK='';});
+}
+function load(){document.getElementById('stamp').textContent='⏳ 불러오는 중…';
+  return jsonp('tDash','&days=14').then(function(d){if(d&&d.ok){D=d;render();}else alert((d&&d.error)||'불러오지 못했어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+function tab(t){TAB=t;document.querySelectorAll('#nav button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===t);});render();}
+function sc(s){return s===null||s===''||s===undefined?'<span class="chip">점수 없음</span>':'<span class="num '+(s>=100?'s100':s<60?'slow':'')+'">'+s+'점</span>';}
+function ek(t){return String(t||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+/* v3: 판(원래 퀴즈북 / 2026 개정판) */
+function isRev(s){return /2026\s*개정/.test(String(s||''));}
+function edChip(s){return isRev(s)?'<span class="chip g">📗 개정판</span>':'<span class="chip">📘 원래판</span>';}
+function twinOf(series,title){var r=isRev(series),t=ek(title);for(var i=0;i<D.keys.length;i++){var k=D.keys[i];if(ek(k.title)===t&&isRev(k.series)!==r)return k;}return null;}
+function modeTxt(n){var p=D.pins.filter(function(x){return x.name===n;})[0]||{},t=(D.totals||{})[n]||0,f=D.quizFrom||200;
+  return p.mode==='퀴즈'?'퀴즈 (선생님 지정)':p.mode==='스토리맵'?'스토리맵 (선생님 지정)':(t<f?'스토리맵 ('+f+'권 전)':'퀴즈');}
+function render(){
+  document.getElementById('stamp').textContent=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' 기준';
+  ({today:rToday,student:rStudent,keys:rKeys,media:rMedia,pins:rPins,battle:rBattle})[TAB]();
+}
+/* 그 학생·그 책에 딸린 정보 */
+function wrongOf(name,title){var a=D.answers.filter(function(r){return r[2]===name&&r[4]===title;});return a.length?a[a.length-1]:null;}
+function liveOf(name,title){return D.liveTodo.filter(function(r){return r[2]===name&&ek(r[4])===ek(title);})[0];}
+function storyOf(name,title){return D.story.filter(function(r){return r[2]===name&&ek(r[4])===ek(title);})[0];}
+
+function recRow(r,showName){
+  var a=wrongOf(r.name,r.title),lv=liveOf(r.name,r.title),st=storyOf(r.name,r.title),h='<tr>';
+  h+='<td>'+esc(r.date||'')+'</td>'+(showName?'<td><a href="#" onclick="SEL=\''+esc(r.name)+'\';tab(\'student\');return false"><b>'+esc(r.name)+'</b></a></td>':'');
+  h+='<td>'+esc(r.title)+'<br><small style="color:var(--mid)">'+esc(r.series)+'</small> '+edChip(r.series)+'</td><td>'+sc(r.score)+'</td><td>';
+  if(a&&a[7])h+='<span class="chip r">틀린 문항 '+esc(a[7])+'</span>';
+  if(st)h+='<span class="chip g">스토리맵 ✔</span>';
+  if(lv)h+=lv[6]?'<span class="chip g">통역 ✔</span>':'<span class="chip y">통역 남음</span>';
+  h+='</td><td style="white-space:nowrap"><button class="btn" onclick="fixScore('+JSON.stringify(r.period).replace(/"/g,'&quot;')+','+JSON.stringify(r.name).replace(/"/g,'&quot;')+','+JSON.stringify(r.title).replace(/"/g,'&quot;')+','+(r.score===null?'null':r.score)+')">점수 고치기</button> ';
+  var tw=twinOf(r.series,r.title);   /* v3: 원래 퀴즈북 ↔ 2026 개정판 */
+  if(tw)h+='<button class="btn" onclick="serFix('+JSON.stringify(r.period).replace(/"/g,'&quot;')+','+JSON.stringify(r.name).replace(/"/g,'&quot;')+','+JSON.stringify(r.title).replace(/"/g,'&quot;')+','+JSON.stringify(tw.series).replace(/"/g,'&quot;')+','+(r.score===null?'null':r.score)+')">판 바꾸기</button> ';
+  h+='<button class="btn del" onclick="delRec('+JSON.stringify(r.period).replace(/"/g,'&quot;')+','+JSON.stringify(r.name).replace(/"/g,'&quot;')+','+JSON.stringify(r.title).replace(/"/g,'&quot;')+')">지우기</button></td></tr>';
+  return h;
+}
+function rToday(){
+  var days={};D.records.forEach(function(r){days[r.date]=1;});var dl=Object.keys(days).sort().reverse();
+  if(dl.indexOf(DAY)<0&&dl.length)DAY=dl[0];
+  var rs=D.records.filter(function(r){return r.date===DAY;}),names={};rs.forEach(function(r){names[r.name]=1;});
+  var wrong=rs.filter(function(r){return r.score!==null&&r.score<100;}).length,low=rs.filter(function(r){return r.score!==null&&r.score<60;}).length;
+  var liveLeft=D.liveTodo.filter(function(r){return !r[6];}).length;
+  var h='<div class="card"><div class="row"><b>날짜</b><select onchange="DAY=this.value;render()">'+dl.map(function(d){return '<option'+(d===DAY?' selected':'')+'>'+d+'</option>';}).join('')+'</select><span class="hint" style="margin:0">최근 14일</span></div>';
+  h+='<div class="kpis"><div class="kpi k1"><b>'+Object.keys(names).length+'명</b><span>채점한 학생</span></div><div class="kpi k2"><b>'+rs.length+'권</b><span>읽은 책</span></div><div class="kpi k3"><b>'+low+'권</b><span>60점 미만 (포인트 0)</span></div><div class="kpi k4"><b>'+liveLeft+'건</b><span>실시간 통역 남음</span></div></div></div>';
+  h+='<div class="card"><h2>'+DAY+' 기록</h2><div class="hint">아이가 책을 잘못 골랐거나 실수로 냈으면 「지우기」, 점수만 틀렸으면 「점수 고치기」. 고치기 전에 자동으로 백업해요.</div>';
+  h+=rs.length?'<table><tr><th>날짜</th><th>학생</th><th>책</th><th>첫 점수</th><th>한 일</th><th></th></tr>'+rs.map(function(r){return recRow(r,true);}).join('')+'</table>':'<div class="hint">이 날 기록이 없어요.</div>';
+  h+='</div>';document.getElementById('main').innerHTML=h;
+}
+function rStudent(){
+  var names=D.pins.map(function(p){return p.name;}).sort();if(!SEL)SEL=names[0]||'';
+  var rs=D.records.filter(function(r){return r.name===SEL;}),pin=D.pins.filter(function(p){return p.name===SEL;})[0]||{};
+  var h='<div class="card"><div class="row"><b>학생</b><select onchange="SEL=this.value;render()">'+names.map(function(n){return '<option'+(n===SEL?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</select>';
+  h+='<span class="chip">번호 '+esc(pin.pin||'-')+'</span><span class="chip '+(pin.video==='동의'?'g':'y')+'">영상 '+esc(pin.video||'미입력')+'</span>';
+  var f=D.forest[SEL];if(f)h+='<span class="chip y">🪙 쓴 코인 '+esc(f.spent)+'</span>';
+  h+='<span class="chip">누적 '+((D.totals||{})[SEL]||0)+'권</span><span class="chip g">채점: '+esc(modeTxt(SEL))+'</span>';
+  h+='</div></div>';
+  var td=new Date(),tds=td.getFullYear()+'-'+String(td.getMonth()+1).padStart(2,'0')+'-'+String(td.getDate()).padStart(2,'0');
+  h+='<div class="card"><h2>📝 종이 점수 넣기 · 단어 통과 처리</h2><div class="hint">태블릿으로 안 낸 책을 종이로 채점했으면 점수를 넣어요 (이미 기록이 있는 책은 아래 표의 「점수 고치기」). 종이로 단어 시험을 봤으면 「단어 통과」를 눌러요.</div>';
+  h+='<div class="row"><input id="pbq" placeholder="책 제목 찾기 (예: Puppy)" oninput="pbList()" style="min-width:200px"><select id="pbsel" style="flex:1;min-width:260px"><option value="">책 제목을 두 글자 이상 넣어 주세요</option></select></div>';
+  h+='<div class="row"><input id="pbscore" type="number" min="0" max="100" placeholder="점수 (0~100)" style="width:150px"><input id="pbdate" type="date" value="'+tds+'"><button class="btn go" onclick="paperAdd()">점수 넣기</button><button class="btn" onclick="wordPass()">단어 통과 처리</button></div></div>';
+  h+='<div class="card"><h2>최근 14일 읽은 책 ('+rs.length+'권)</h2>'+(rs.length?'<table><tr><th>날짜</th><th>책</th><th>첫 점수</th><th>한 일</th><th></th></tr>'+rs.map(function(r){return recRow(r,false);}).join('')+'</table>':'<div class="hint">최근 기록이 없어요.</div>')+'</div>';
+  var wp=(D.wordPass||[]).filter(function(r){return r[2]===SEL;});
+  h+='<div class="card"><h2>✅ 단어 테스트 통과한 책</h2>'+(wp.length?'<table><tr><th>날짜</th><th>책</th><th>점수</th><th>방법</th></tr>'+wp.slice(0,30).map(function(r){return '<tr><td>'+esc(r[1])+'</td><td>'+esc(r[4])+'</td><td class="num">'+esc(r[5])+'</td><td>'+esc(r[6])+'</td></tr>';}).join('')+'</table>':'<div class="hint">아직 없어요.</div>')+'</div>';
+  var wd=D.words.filter(function(r){return r[2]===SEL;});
+  h+='<div class="card"><h2>단어 익히기</h2>'+(wd.length?'<table><tr><th>날짜</th><th>책</th><th>첫 시도</th><th>틀린 단어</th></tr>'+wd.slice(0,15).map(function(r){return '<tr><td>'+esc(r[1])+'</td><td>'+esc(r[4])+'</td><td class="num">'+esc(r[5])+' / '+esc(r[6])+'</td><td>'+esc(r[7])+'</td></tr>';}).join('')+'</table>':'<div class="hint">기록이 없어요.</div>')+'</div>';
+  var lv=D.liveLog.filter(function(r){return r[2]===SEL;});
+  h+='<div class="card"><h2>🎙️ 실시간 통역!</h2>'+(lv.length?mediaTable(lv,'live'):'<div class="hint">기록이 없어요.</div>')+'</div>';
+  var st=D.story.filter(function(r){return r[2]===SEL;});
+  h+='<div class="card"><h2>🗺️ 스토리맵</h2>'+(st.length?'<table><tr><th>날짜</th><th>책</th><th>첫 시도 점수</th><th>틀린 횟수</th><th>쓴 글</th></tr>'+st.map(function(r){return '<tr><td>'+esc(r[1])+'</td><td>'+esc(r[4])+'</td><td>'+(r[8]===''||r[8]===undefined?'':sc(Number(r[8])))+'</td><td class="num">'+esc(r[5])+'</td><td>'+esc(r[7])+'</td></tr>';}).join('')+'</table>':'<div class="hint">기록이 없어요.</div>')+'</div>';
+  document.getElementById('main').innerHTML=h;
+}
+var KQ='';
+function rKeys(){
+  var h='<div class="card"><h2>정답 고치기 · 다시 채점</h2><div class="hint">정답을 고치면, [채점답안]에 답이 남아 있는 아이들은 새 정답으로 점수를 다시 매겨요 (v43 배포 뒤 채점한 것부터 남아요). 0 = 그 문항은 누가 골라도 정답.</div>';
+  h+='<div class="row"><input id="kq" placeholder="책 제목 찾기 (예: Splat)" value="'+esc(KQ)+'" oninput="KQ=this.value;kList()" style="flex:1;min-width:220px"></div><div id="klist"></div></div>';
+  document.getElementById('main').innerHTML=h;kList();
+}
+function kList(){
+  var qq=KQ.trim().toLowerCase(),el=document.getElementById('klist');
+  if(qq.length<2){el.innerHTML='<div class="hint">두 글자 이상 넣어 주세요.</div>';return;}
+  var ks=D.keys.map(function(k,i){k._i=i;return k;}).filter(function(k){return (k.title+' '+k.series).toLowerCase().indexOf(qq)>=0;}).slice(0,40);
+  el.innerHTML=ks.length?'<table><tr><th>책</th><th>문항</th><th>정답 (1~4)</th><th></th></tr>'+ks.map(function(k){
+    return '<tr><td>'+esc(k.title)+'<br><small style="color:var(--mid)">'+esc(k.series)+'</small></td><td class="num">'+k.count+'</td><td><input class="mono" id="ka'+k._i+'" value="'+esc(k.answers)+'" maxlength="'+k.count+'" size="'+(k.count+2)+'"></td><td><button class="btn go" onclick="keySave('+k._i+')">고치기</button></td></tr>';}).join('')+'</table>':'<div class="hint">찾는 책이 없어요.</div>';
+}
+function keySave(i){
+  var k=D.keys[i],v=document.getElementById('ka'+i).value.replace(/[^0-5]/g,'');
+  if(v===k.answers){alert('바뀐 게 없어요.');return;}
+  if(v.length!==k.count){alert('정답은 '+k.count+'자리여야 해요. (지금 '+v.length+'자리)');return;}
+  jsonp('tKeySet',q({series:k.series,title:k.title,answers:v})).then(function(d){
+    if(!d||!d.ok){alert((d&&d.error)||'안 됐어요.');return;}
+    var msg='「'+k.title+'」\n이전 정답: '+d.old+'\n새 정답:   '+v+'\n\n';
+    msg+=d.changes.length?'점수가 바뀌는 아이 '+d.changes.length+'명:\n'+d.changes.map(function(c){return ' · '+c.name+'  '+c.from+'점 → '+c.to+'점';}).join('\n'):'점수가 바뀌는 아이는 없어요. (답안이 남은 기록 기준)';
+    if(!confirm(msg+'\n\n이대로 고칠까요?'))return;
+    jsonp('tKeySet',q({series:k.series,title:k.title,answers:v,apply:1})).then(function(r){
+      if(!r||!r.ok){alert((r&&r.error)||'안 됐어요.');return;}alert('✅ 정답을 고쳤어요.'+(r.changed?' '+r.changed+'명 점수를 다시 매겼어요.':''));load();});
+  }).catch(function(){alert('인터넷 연결을 확인해 주세요.');});
+}
+function drv(u){var m=String(u||'').match(/\/d\/([^/]+)/);return m?'https://drive.google.com/file/d/'+m[1]+'/preview':'';}
+function mediaTable(rows,kind){
+  /* live: [row,날짜,학생,시리즈,책,번호,문장,받아쓴 말,점수,종류,링크,⭐]  rec: [row,날짜,학생,시리즈,책,문항,링크,저장시각,⭐] */
+  var h='<table><tr><th>⭐</th><th>날짜</th><th>학생</th><th>책</th>'+(kind==='live'?'<th>문장 → 아이가 말한 것</th><th>점수</th>':'<th>문항</th>')+'<th></th></tr>';
+  rows.forEach(function(r){
+    var star=kind==='live'?r[11]:r[8],link=kind==='live'?r[10]:r[6];
+    h+='<tr><td><button class="star" onclick="star(\''+(kind==='live'?'live':'rec')+'\','+r[0]+',this)">'+(star?'⭐':'☆')+'</button></td><td>'+esc(r[1])+'</td><td><b>'+esc(r[2])+'</b></td><td>'+esc(r[4])+'</td>';
+    if(kind==='live')h+='<td>'+esc(r[6])+'<br><span style="color:var(--mid)">→ '+esc(r[7])+'</span></td><td>'+(r[8]===''?'':sc(Number(r[8])))+' <span class="chip">'+esc(r[9])+'</span></td>';
+    else h+='<td>'+esc(r[5])+'번</td>';
+    h+='<td>'+(/^http/.test(link)?'<a class="btn" href="'+esc(link)+'" target="_blank" rel="noopener">▶ 열기</a>':'')+'</td></tr>';});
+  return h+'</table>';
+}
+function rMedia(){
+  var h='<div class="card"><h2>🎙️ 실시간 통역! (최근 150개)</h2><div class="hint">⭐를 누르면 학부모님 페이지에 올라갈 것으로 표시돼요. ▶ 열기는 드라이브에서 열려요 (학원 구글 계정으로 로그인된 컴퓨터에서).</div>'+(D.liveLog.length?mediaTable(D.liveLog,'live'):'<div class="hint">아직 없어요.</div>')+'</div>';
+  h+='<div class="card"><h2>🎤 고치기 낭독 녹음 (최근 150개)</h2>'+(D.recLog.length?mediaTable(D.recLog,'rec'):'<div class="hint">아직 없어요.</div>')+'</div>';
+  document.getElementById('main').innerHTML=h;
+}
+function star(tabName,row,btn){btn.disabled=true;jsonp('tStar',q({tab:tabName,row:row})).then(function(d){btn.disabled=false;if(d&&d.ok)btn.textContent=d.star?'⭐':'☆';else alert((d&&d.error)||'안 됐어요.');}).catch(function(){btn.disabled=false;});}
+function rPins(){
+  var h='<div class="card"><h2>학생 관리</h2><div class="hint">영상동의가 「동의」인 학생만 녹화방에서 카메라가 켜져요. 퇴원일을 적으면 1년 뒤 녹음·영상이 자동으로 정리돼요.<br>채점 방식: 자동이면 누적 '+(D.quizFrom||200)+'권 전에는 스토리맵 첫 시도가 점수, 그 뒤로는 퀴즈 채점. 늦게 들어온 높은 레벨 학생은 「퀴즈」로 바꿔 주세요.</div>';
+  h+='<div class="row"><input id="newName" placeholder="새 학생 이름"><button class="btn go" onclick="pinAdd()">학생 추가 (번호 자동)</button></div>';
+  h+='<table><tr><th>학생</th><th>번호</th><th>영어이름 (완독상)</th><th>채점 방식</th><th>영상동의</th><th>퇴원일</th><th></th></tr>';
+  D.pins.slice().sort(function(a,b){return a.name<b.name?-1:1;}).forEach(function(p){
+    var n=JSON.stringify(p.name).replace(/"/g,'&quot;');
+    h+='<tr><td><b>'+esc(p.name)+'</b>'+(p.purged?' <span class="chip">정리됨 '+esc(p.purged)+'</span>':'')+'</td><td class="mono">'+esc(p.pin)+'</td>';
+    h+='<td><input value="'+esc(p.ename||'')+'" placeholder="Ian Lim" style="width:130px" onchange="pinSet('+n+',\'ename\',this.value)"></td>';
+    var tt=(D.totals||{})[p.name]||0,ff=D.quizFrom||200;
+    h+='<td><select onchange="pinSet('+n+',\'mode\',this.value)">'+[['','자동 · '+tt+'권 → '+(tt<ff?'스토리맵':'퀴즈')],['퀴즈','퀴즈 (지정)'],['스토리맵','스토리맵 (지정)']].map(function(o){return '<option value="'+o[0]+'"'+((p.mode||'')===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></td>';
+    h+='<td><select onchange="pinSet('+n+',\'video\',this.value)">'+['','동의','소리만','미동의'].map(function(v){return '<option value="'+v+'"'+(p.video===v?' selected':'')+'>'+(v||'(미입력)')+'</option>';}).join('')+'</select></td>';
+    h+='<td><input type="date" value="'+esc(p.out)+'" onchange="pinSet('+n+',\'out\',this.value)"></td>';
+    h+='<td style="white-space:nowrap"><button class="btn" onclick="pinSet('+n+',\'unlock\',\'\')">잠금 풀기</button> <button class="btn" onclick="pinNew('+n+')">번호 새로</button></td></tr>';});
+  h+='</table></div>';document.getElementById('main').innerHTML=h;
+}
+function pinSet(name,field,value){jsonp('tPinSet',q({name:name,field:field,value:value})).then(function(d){
+  if(!d||!d.ok){alert((d&&d.error)||'안 됐어요.');load();return;}
+  var p=D.pins.filter(function(x){return x.name===name;})[0];if(p&&(field==='video'||field==='out'||field==='ename'||field==='mode'))p[field]=value;
+  if(field==='unlock')alert(name+' 학생 잠금을 풀었어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+function pinNew(name){if(!confirm(name+' 학생 번호를 새로 만들까요? 예전 번호는 못 쓰게 돼요.'))return;
+  jsonp('tPinSet',q({name:name,field:'pin',value:''})).then(function(d){if(d&&d.ok){alert(name+' 새 번호: '+d.pin);load();}else alert((d&&d.error)||'안 됐어요.');});}
+function pinAdd(){var n=document.getElementById('newName').value.replace(/\s/g,'');if(!n)return;
+  jsonp('tPinSet',q({name:n,field:'add',value:''})).then(function(d){if(d&&d.ok){alert(n+' 학생 번호: '+d.pin);load();}else alert((d&&d.error)||'안 됐어요.');});}
+function fixScore(period,name,title,cur){
+  var v=prompt('「'+title+'」 '+name+'\n지금 점수: '+(cur===null?'없음':cur+'점')+'\n\n새 점수를 넣어 주세요 (0~100, 비우면 점수 없음)',cur===null?'':cur);
+  if(v===null)return;v=v.trim();if(v!==''&&(isNaN(Number(v))||Number(v)<0||Number(v)>100)){alert('0~100 사이 숫자로 넣어 주세요.');return;}
+  jsonp('tRecFix',q({op:'score',period:period,name:name,title:title,score:v})).then(function(d){if(d&&d.ok){load();}else alert((d&&d.error)||'안 됐어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});
+}
+function serFix(period,name,title,toSer,cur){
+  var v=prompt('「'+title+'」 '+name+'\n판을 「'+toSer+'」(으)로 바꿔요.\n\n그 판으로 종이 채점한 점수가 있으면 넣어 주세요 (0~100).\n비우면 지금 점수('+(cur===null?'없음':cur+'점')+') 그대로예요.','');
+  if(v===null)return;v=v.trim();if(v!==''&&(isNaN(Number(v))||Number(v)<0||Number(v)>100)){alert('0~100 사이 숫자로 넣어 주세요.');return;}
+  jsonp('tRecFix',q({op:'series',period:period,name:name,title:title,series:toSer,score:v})).then(function(d){if(d&&d.ok){alert('✅ 판을 바꿨어요. (백업해 뒀어요)');load();}else alert((d&&d.error)||'안 됐어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});
+}
+/* v3: 종이 점수 넣기 · 단어 통과 처리 — 학생별 화면 */
+var PB='';
+function pbList(){var qq=(document.getElementById('pbq').value||'').trim().toLowerCase(),el=document.getElementById('pbsel');
+  var ks=qq.length<2?[]:D.keys.map(function(k,i){k._i=i;return k;}).filter(function(k){return (k.title+' '+k.series).toLowerCase().indexOf(qq)>=0;}).slice(0,30);
+  el.innerHTML='<option value="">'+(qq.length<2?'책 제목을 두 글자 이상 넣어 주세요':ks.length?'책을 골라 주세요 ('+ks.length+'권)':'찾는 책이 없어요')+'</option>'+ks.map(function(k){return '<option value="'+k._i+'">'+esc(k.title)+' — '+(isRev(k.series)?'📗 개정판':'📘 원래판')+' ('+esc(k.series.replace(/\s*2026\s*개정/,''))+')</option>';}).join('');}
+function pbKey(){var v=document.getElementById('pbsel').value;if(v===''){alert('책을 골라 주세요.');return null;}return D.keys[Number(v)];}
+function paperAdd(){var k=pbKey();if(!k)return;var s=document.getElementById('pbscore').value.trim(),dt=document.getElementById('pbdate').value;
+  if(s===''||isNaN(Number(s))||Number(s)<0||Number(s)>100){alert('점수를 0~100으로 넣어 주세요. (10문항 중 7개 = 70)');return;}
+  if(!confirm(SEL+' · 「'+k.title+'」 ('+(isRev(k.series)?'개정판':'원래판')+')\n'+dt+' · '+s+'점으로 넣을까요?'))return;
+  jsonp('tRecAdd',q({name:SEL,series:k.series,title:k.title,score:s,date:dt})).then(function(d){if(d&&d.ok){alert('✅ 넣었어요.');load();}else alert((d&&d.error)||'안 됐어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+function wordPass(){var k=pbKey();if(!k)return;
+  if(!confirm(SEL+' · 「'+k.title+'」\n단어 테스트 통과로 처리할까요? (종이로 단어 시험을 본 경우)'))return;
+  jsonp('tWordPass',q({name:SEL,series:k.series,title:k.title})).then(function(d){if(d&&d.ok){alert(d.added?'✅ 통과 처리했어요. 아이가 다시 로그인하면 열려요.':'이미 통과한 책이에요.');load();}else alert((d&&d.error)||'안 됐어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+function rBattle(){
+  var rows=D.battle||[],by={};rows.forEach(function(r){(by[r.series]=by[r.series]||[]).push(r);});
+  var w=String(D.week||'').split('-');
+  var h='<div class="card"><h2>⚔️ 이번 주 보카 배틀 ('+(w.length===3?Number(w[1])+'월 '+Number(w[2])+'일 주':'')+')</h2><div class="hint">같은 시리즈 아이들끼리 같은 문제(★ 단어 위주 15문제)로 겨뤄요. 한 주에 3번, 최고점으로 순위. 다음 주에 시리즈별 1~3등(2명 이상 참가)이 코인 100·60·40을 받아요.</div>';
+  var sers=Object.keys(by).sort();
+  if(!sers.length)h+='<div class="hint">이번 주에는 아직 아무도 안 했어요.</div>';
+  sers.forEach(function(sr){var L=by[sr].sort(function(a,b){return b.score-a.score||b.right-a.right;});
+    h+='<h3 style="color:var(--navy);margin:14px 0 6px">'+esc(sr)+' · '+L.length+'명</h3><table><tr><th>순위</th><th>학생</th><th>최고점</th><th>맞힌 수</th><th>도전</th></tr>'+L.map(function(r,i){return '<tr><td class="num">'+(i+1)+'</td><td><b>'+esc(r.name)+'</b></td><td class="num">'+r.score+'</td><td class="num">'+r.right+'</td><td class="num">'+r.tries+' / 3</td></tr>';}).join('')+'</table>';});
+  document.getElementById('main').innerHTML=h+'</div>';
+}
+function delRec(period,name,title){
+  if(!confirm('「'+title+'」 '+name+' ('+period+')\n\n이 기록을 지울까요? 아이가 다시 채점하면 그 점수가 첫 점수가 돼요.'))return;
+  var t=prompt('정말 지우려면 학생 이름을 그대로 적어 주세요: '+name);
+  if(t===null)return;if(t.trim()!==name){alert('이름이 달라서 지우지 않았어요.');return;}
+  jsonp('tRecFix',q({op:'delete',period:period,name:name,title:title,confirm:name})).then(function(d){if(d&&d.ok){alert('지웠어요. (백업해 뒀어요)');load();}else alert((d&&d.error)||'안 됐어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});
+}
+try{var s=sessionStorage.getItem('ttk');if(s){document.getElementById('pw').value=s;doLogin();}}catch(e){}
+</script>
+</body>
+</html>
