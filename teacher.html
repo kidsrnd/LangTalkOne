@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>낭독원 선생님 사이트 v3</title>
+<title>낭독원 선생님 사이트 v5</title>
 <style>
 :root{--navy:#1B3A6B;--red:#C63A26;--ink:#1F2430;--mid:#3E4759;--line:#D5DCE8;--bg:#F5F1EA;--green:#2C7A4B;--gold:#B7791F}
 *{box-sizing:border-box}
@@ -104,7 +104,8 @@ function isRev(s){return /2026\s*개정/.test(String(s||''));}
 function edChip(s){return isRev(s)?'<span class="chip g">📗 개정판</span>':'<span class="chip">📘 원래판</span>';}
 function twinOf(series,title){var r=isRev(series),t=ek(title);for(var i=0;i<D.keys.length;i++){var k=D.keys[i];if(ek(k.title)===t&&isRev(k.series)!==r)return k;}return null;}
 function modeTxt(n){var p=D.pins.filter(function(x){return x.name===n;})[0]||{},t=(D.totals||{})[n]||0,f=D.quizFrom||200;
-  return p.mode==='퀴즈'?'퀴즈 (선생님 지정)':p.mode==='스토리맵'?'스토리맵 (선생님 지정)':(t<f?'스토리맵 ('+f+'권 전)':'퀴즈');}
+  var w=D.wordsUntil||100;   /* v4: 100권 전 단어·표현 → 200권 전 스토리맵 → 퀴즈 */
+  return p.mode==='퀴즈'?'퀴즈 (선생님 지정)':p.mode==='스토리맵'?'스토리맵 (선생님 지정)':p.mode==='단어'?'단어·표현 (선생님 지정)':(!D.tiers?'퀴즈':t<w?'단어·표현 ('+w+'권 전)':t<f?'스토리맵 ('+f+'권 전)':'퀴즈');}   /* v5: 단계 스위치가 꺼져 있으면 모두 퀴즈 */
 function render(){
   document.getElementById('stamp').textContent=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' 기준';
   ({today:rToday,student:rStudent,keys:rKeys,media:rMedia,pins:rPins,battle:rBattle})[TAB]();
@@ -207,7 +208,7 @@ function rMedia(){
 }
 function star(tabName,row,btn){btn.disabled=true;jsonp('tStar',q({tab:tabName,row:row})).then(function(d){btn.disabled=false;if(d&&d.ok)btn.textContent=d.star?'⭐':'☆';else alert((d&&d.error)||'안 됐어요.');}).catch(function(){btn.disabled=false;});}
 function rPins(){
-  var h='<div class="card"><h2>학생 관리</h2><div class="hint">영상동의가 「동의」인 학생만 녹화방에서 카메라가 켜져요. 퇴원일을 적으면 1년 뒤 녹음·영상이 자동으로 정리돼요.<br>채점 방식: 자동이면 누적 '+(D.quizFrom||200)+'권 전에는 스토리맵 첫 시도가 점수, 그 뒤로는 퀴즈 채점. 늦게 들어온 높은 레벨 학생은 「퀴즈」로 바꿔 주세요.</div>';
+  var h='<div class="card"><h2>학생 관리</h2><div class="hint">영상동의가 「동의」인 학생만 녹화방에서 카메라가 켜져요. 퇴원일을 적으면 1년 뒤 녹음·영상이 자동으로 정리돼요.<br>채점 방식: '+(D.tiers?'':'<b>지금은 권수별 단계가 꺼져 있어서 자동 = 모두 퀴즈예요.</b> 켜면 ')+'자동이면 누적 '+(D.wordsUntil||100)+'권 전에는 단어·표현만 익히면 완독(단어 테스트 점수가 책 점수), '+(D.quizFrom||200)+'권 전에는 스토리맵 첫 시도가 점수, 그 뒤로는 퀴즈 채점. 퀴즈북을 가진 학생·늦게 들어온 높은 레벨 학생은 「퀴즈」로 바꿔 주세요.</div>';
   h+='<div class="row"><input id="newName" placeholder="새 학생 이름"><button class="btn go" onclick="pinAdd()">학생 추가 (번호 자동)</button></div>';
   h+='<table><tr><th>학생</th><th>번호</th><th>영어이름 (완독상)</th><th>채점 방식</th><th>영상동의</th><th>퇴원일</th><th></th></tr>';
   D.pins.slice().sort(function(a,b){return a.name<b.name?-1:1;}).forEach(function(p){
@@ -215,7 +216,7 @@ function rPins(){
     h+='<tr><td><b>'+esc(p.name)+'</b>'+(p.purged?' <span class="chip">정리됨 '+esc(p.purged)+'</span>':'')+'</td><td class="mono">'+esc(p.pin)+'</td>';
     h+='<td><input value="'+esc(p.ename||'')+'" placeholder="Ian Lim" style="width:130px" onchange="pinSet('+n+',\'ename\',this.value)"></td>';
     var tt=(D.totals||{})[p.name]||0,ff=D.quizFrom||200;
-    h+='<td><select onchange="pinSet('+n+',\'mode\',this.value)">'+[['','자동 · '+tt+'권 → '+(tt<ff?'스토리맵':'퀴즈')],['퀴즈','퀴즈 (지정)'],['스토리맵','스토리맵 (지정)']].map(function(o){return '<option value="'+o[0]+'"'+((p.mode||'')===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></td>';
+    h+='<td><select onchange="pinSet('+n+',\'mode\',this.value)">'+[['','자동 · '+tt+'권 → '+(!D.tiers?'퀴즈':tt<(D.wordsUntil||100)?'단어·표현':tt<ff?'스토리맵':'퀴즈')],['퀴즈','퀴즈 (지정)'],['스토리맵','스토리맵 (지정)'],['단어','단어·표현 (지정)']].map(function(o){return '<option value="'+o[0]+'"'+((p.mode||'')===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></td>';
     h+='<td><select onchange="pinSet('+n+',\'video\',this.value)">'+['','동의','소리만','미동의'].map(function(v){return '<option value="'+v+'"'+(p.video===v?' selected':'')+'>'+(v||'(미입력)')+'</option>';}).join('')+'</select></td>';
     h+='<td><input type="date" value="'+esc(p.out)+'" onchange="pinSet('+n+',\'out\',this.value)"></td>';
     h+='<td style="white-space:nowrap"><button class="btn" onclick="pinSet('+n+',\'unlock\',\'\')">잠금 풀기</button> <button class="btn" onclick="pinNew('+n+')">번호 새로</button></td></tr>';});
