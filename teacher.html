@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>낭독원 선생님 사이트 v5</title>
+<title>낭독원 선생님 사이트 v7</title>
 <style>
 :root{--navy:#1B3A6B;--red:#C63A26;--ink:#1F2430;--mid:#3E4759;--line:#D5DCE8;--bg:#F5F1EA;--green:#2C7A4B;--gold:#B7791F}
 *{box-sizing:border-box}
@@ -64,6 +64,8 @@ audio,video{max-width:260px;height:36px}video{height:auto}
     <button data-t="keys" onclick="tab('keys')">정답 · 다시 채점</button>
     <button data-t="media" onclick="tab('media')">녹음 · 영상</button>
     <button data-t="battle" onclick="tab('battle')">⚔️ 보카 배틀</button>
+    <button data-t="vt" onclick="tab('vt')">📝 단어·보강</button>
+    <button data-t="check" onclick="tab('check')">✅ 확인할 일 <span id="ckN"></span></button>
     <button data-t="pins" onclick="tab('pins')">학생 관리</button>
   </nav>
   <span class="sp"></span>
@@ -108,7 +110,9 @@ function modeTxt(n){var p=D.pins.filter(function(x){return x.name===n;})[0]||{},
   return p.mode==='퀴즈'?'퀴즈 (선생님 지정)':p.mode==='스토리맵'?'스토리맵 (선생님 지정)':p.mode==='단어'?'단어·표현 (선생님 지정)':(!D.tiers?'퀴즈':t<w?'단어·표현 ('+w+'권 전)':t<f?'스토리맵 ('+f+'권 전)':'퀴즈');}   /* v5: 단계 스위치가 꺼져 있으면 모두 퀴즈 */
 function render(){
   document.getElementById('stamp').textContent=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' 기준';
-  ({today:rToday,student:rStudent,keys:rKeys,media:rMedia,pins:rPins,battle:rBattle})[TAB]();
+  ({today:rToday,student:rStudent,keys:rKeys,media:rMedia,pins:rPins,battle:rBattle,check:rCheck,vt:rVt})[TAB]();
+  var n=(D.ort||[]).filter(function(r){return r[6]==='확인 중';}).length+(D.bugs||[]).filter(function(r){return r[5]==='확인 중';}).length;
+  document.getElementById('ckN').textContent=n?'('+n+')':'';
 }
 /* 그 학생·그 책에 딸린 정보 */
 function wrongOf(name,title){var a=D.answers.filter(function(r){return r[2]===name&&r[4]===title;});return a.length?a[a.length-1]:null;}
@@ -253,6 +257,51 @@ function paperAdd(){var k=pbKey();if(!k)return;var s=document.getElementById('pb
 function wordPass(){var k=pbKey();if(!k)return;
   if(!confirm(SEL+' · 「'+k.title+'」\n단어 테스트 통과로 처리할까요? (종이로 단어 시험을 본 경우)'))return;
   jsonp('tWordPass',q({name:SEL,series:k.series,title:k.title})).then(function(d){if(d&&d.ok){alert(d.added?'✅ 통과 처리했어요. 아이가 다시 로그인하면 열려요.':'이미 통과한 책이에요.');load();}else alert((d&&d.error)||'안 됐어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+/* v6: 📘 ORT 다 읽었어요 확인 · 🐞 버그 헌터 · 🛡️ 보안기록 (서버 v52) */
+function rCheck(){
+  if(!D.ort){document.getElementById('main').innerHTML='<div class="card"><div class="hint">서버를 v52로 바꾸면 이 화면이 보여요.</div></div>';return;}
+  var ow=D.ort.filter(function(r){return r[6]==='확인 중';}),od=D.ort.filter(function(r){return r[6]!=='확인 중';}).slice(-15).reverse();
+  var h='<div class="card"><h2>📘 ORT 다 읽었어요 — 확인해 주세요 ('+ow.length+')</h2><div class="hint">아이가 빙고판에서 누른 ORT 책이에요. 「확인」을 누르면 독서기록에 ORT 1(점수 없음, 0.5점)으로 들어가고 빙고 칸이 채워져요.</div>';
+  h+=ow.length?'<table><tr><th>날짜</th><th>학생</th><th>책</th><th></th></tr>'+ow.map(function(r){return '<tr><td>'+esc(r[1])+'</td><td><b>'+esc(r[2])+'</b></td><td>'+esc(r[4])+'</td><td style="white-space:nowrap"><button class="btn" onclick="ortOk('+r[0]+',1)">✅ 확인</button> <button class="btn del" onclick="ortOk('+r[0]+',0)">아니에요</button></td></tr>';}).join('')+'</table>':'<div class="hint">기다리는 신청이 없어요.</div>';
+  if(od.length)h+='<details style="margin-top:10px"><summary>최근 처리한 것</summary><table>'+od.map(function(r){return '<tr><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td>'+esc(r[4])+'</td><td>'+esc(r[6])+'</td></tr>';}).join('')+'</table></details>';
+  h+='</div>';
+  var bw=(D.bugs||[]).filter(function(r){return r[5]==='확인 중';}),bd=(D.bugs||[]).filter(function(r){return r[5]!=='확인 중';}).slice(-15).reverse();
+  h+='<div class="card"><h2>🐞 버그 헌터 제보 ('+bw.length+')</h2><div class="hint">진짜 버그면 코인을 정해서 「인정」 (보통 50~100, 점수를 조작할 수 있는 큰 구멍이면 200~300). 아니면 「버그 아님」. 코인은 그 아이 포레스트에 바로 들어가요.</div>';
+  h+=bw.length?'<table><tr><th>날짜</th><th>학생</th><th>어디서</th><th>무엇이</th><th></th></tr>'+bw.map(function(r){return '<tr><td>'+esc(r[1])+'</td><td><b>'+esc(r[2])+'</b></td><td>'+esc(r[3])+'</td><td style="max-width:420px">'+esc(r[4])+'</td><td style="white-space:nowrap"><input id="bc'+r[0]+'" type="number" value="100" min="0" max="300" style="width:70px"> <button class="btn" onclick="bugOk('+r[0]+')">🐞 인정</button> <button class="btn del" onclick="bugNo('+r[0]+')">버그 아님</button></td></tr>';}).join('')+'</table>':'<div class="hint">새 제보가 없어요.</div>';
+  if(bd.length)h+='<details style="margin-top:10px"><summary>최근 처리한 것</summary><table>'+bd.map(function(r){return '<tr><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td>'+esc(r[4])+'</td><td>'+esc(r[5])+(r[6]?' 🪙'+esc(r[6]):'')+'</td></tr>';}).join('')+'</table></details>';
+  h+='</div>';
+  var sec=(D.sec||[]).filter(function(r){return /🛡️|너무 빨라|이상해요|열지 않고|답 없이|한도|없는 책/.test(r[3]);});
+  h+='<div class="card"><h2>🛡️ 보안기록 (최근)</h2><div class="hint">번역 기능을 켠 아이, 너무 빨리 푼 테스트·스토리맵, 이상한 배틀 시간이 남아요. 바로 혼내기보다 「버그를 찾았으면 알려 주면 상」이라고 이끌어 주세요.</div>';
+  h+=sec.length?'<table><tr><th>시각</th><th>학생</th><th>무엇</th><th>자세히</th></tr>'+sec.map(function(r){return '<tr><td>'+esc(r[1])+'</td><td><b>'+esc(r[2])+'</b></td><td>'+esc(r[3])+'</td><td>'+esc(r[4])+'</td></tr>';}).join('')+'</table>':'<div class="hint">기록이 없어요.</div>';
+  document.getElementById('main').innerHTML=h+'</div>';
+}
+function ortOk(row,yes){if(!yes&&!confirm('이 신청을 「아니에요」로 처리할까요? (아이 빙고판에서 확인 중 표시가 사라져요)'))return;
+  jsonp('tOrtOk',q({row:row,ok:yes?1:0})).then(function(d){if(d&&d.ok)load();else alert((d&&d.error)||'처리하지 못했어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+function bugOk(row){var c=Number(document.getElementById('bc'+row).value)||0;if(c<=0){alert('코인을 1 이상 넣어 주세요.');return;}if(c>300){alert('코인은 300까지예요.');return;}
+  if(!confirm('이 제보를 버그로 인정하고 코인 '+c+'개를 줄까요?'))return;
+  jsonp('tBugOk',q({row:row,coins:c})).then(function(d){if(d&&d.ok)load();else alert((d&&d.error)||'처리하지 못했어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+function bugNo(row){if(!confirm('「버그 아님」으로 처리할까요?'))return;
+  jsonp('tBugOk',q({row:row,coins:0})).then(function(d){if(d&&d.ok)load();else alert((d&&d.error)||'처리하지 못했어요.');}).catch(function(){alert('인터넷 연결을 확인해 주세요.');});}
+/* v7: 📝 단어 테스트 기록 · 🗓️ 토요일 보강 (서버 v53) */
+var VTDAY='';
+function rVt(){
+  if(!D.wk){document.getElementById('main').innerHTML='<div class="card"><div class="hint">서버를 v53으로 바꾸면 이 화면이 보여요.</div></div>';return;}
+  var W=D.wk,act=D.pins.filter(function(p){return p.name&&!p.out&&!p.purged&&p.name!=='체험학생';});
+  var low=act.map(function(p){return {name:p.name,n:W.n[p.name]||0};}).filter(function(x){return x.n<W.need;}).sort(function(a,b){return a.n-b.n||(a.name<b.name?-1:1);});
+  var md=function(d){var a=String(d).split('-');return a.length===3?Number(a[1])+'/'+Number(a[2]):d;};
+  var h='<div class="card"><h2>🗓️ 토요일 보강 대상 — 이번 주 '+md(W.mon)+'(월)~'+md(W.fri)+'(금) 다독 '+W.need+'권 미만 ('+low.length+'명)</h2>';
+  h+='<div class="hint">'+(W.dow>=5?'이번 주 확정이에요. 아이들 사이트 홈에도 「토요일 보강」이 떠 있어요.':'아직 주중이라 바뀔 수 있어요. 금요일부터 아이들 사이트 홈에 「토요일 보강」이 떠요.')+' 같은 책은 한 번만 세요. 퇴원 처리한 학생과 체험학생은 빠져요.</div>';
+  h+=low.length?'<table><tr><th>학생</th><th>이번 주 권수</th><th>모자란 권수</th></tr>'+low.map(function(x){return '<tr><td><b>'+esc(x.name)+'</b></td><td class="num">'+x.n+'권</td><td class="num slow">'+(W.need-x.n)+'권</td></tr>';}).join('')+'</table>':'<div class="hint">모두 목표를 채웠어요 👍</div>';
+  h+='</div>';
+  var rows=(D.vt||[]),days={};rows.forEach(function(r){days[String(r[1]).slice(0,10)]=1;});var dl=Object.keys(days).sort().reverse();
+  if(!VTDAY||dl.indexOf(VTDAY)<0)VTDAY=dl[0]||'';
+  h+='<div class="card"><h2>📝 단어 테스트 기록</h2><div class="hint">정독 단어는 수업 전에 통과해 와야 해요. 같은 단원을 여러 번 봤으면 줄이 여러 개예요 (✎ = 철자를 틀린 단어).</div>';
+  h+='<div style="margin:8px 0">'+dl.slice(0,10).map(function(d){return '<button class="btn'+(d===VTDAY?' on':'')+'" onclick="VTDAY=\''+d+'\';rVt()">'+md(d)+'</button> ';}).join('')+'</div>';
+  var day=rows.filter(function(r){return String(r[1]).slice(0,10)===VTDAY;}).sort(function(a,b){return (/^정독/.test(b[3])-/^정독/.test(a[3]))||(a[2]<b[2]?-1:a[2]>b[2]?1:0);});
+  h+=day.length?'<table><tr><th>시각</th><th>학생</th><th>세트</th><th>단원</th><th>뜻</th><th>철자</th><th>결과</th><th>걸린 시간</th><th>틀린 단어</th></tr>'+day.map(function(r){
+    return '<tr><td>'+esc(String(r[1]).slice(11))+'</td><td><b>'+esc(r[2])+'</b></td><td>'+(/^정독/.test(r[3])?'<span class="chip r">📕 '+esc(r[3])+'</span>':esc(r[3]))+'</td><td class="num">'+esc(r[4])+'</td><td class="num">'+esc(r[5])+'</td><td class="num">'+esc(r[6])+'</td><td>'+(r[7]==='✅'?'<span class="chip g">✅ 통과</span>':'<span class="chip y">다시</span>')+'</td><td class="num">'+esc(r[8])+'초</td><td style="max-width:300px;font-size:13px">'+esc(r[9]||'')+'</td></tr>';}).join('')+'</table>':'<div class="hint">기록이 없어요.</div>';
+  document.getElementById('main').innerHTML=h+'</div>';
+}
 function rBattle(){
   var rows=D.battle||[],by={};rows.forEach(function(r){(by[r.series]=by[r.series]||[]).push(r);});
   var w=String(D.week||'').split('-');
