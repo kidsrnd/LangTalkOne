@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" translate="no" class="notranslate">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>낭독원 원서 사이트 v31</title>
+<meta name="google" content="notranslate">
+<title>낭독원 원서 사이트 v33</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Lora:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -201,6 +202,41 @@ details.admin summary::-webkit-details-marker{display:none}
 .bgc.line{box-shadow:0 0 0 3px #F2B705 inset}
 .bgreward{margin-top:8px;padding:11px 14px;border-radius:12px;background:#FFF6D9;color:#7A5200;font-weight:800;font-size:14.5px;line-height:1.6}
 @media (max-width:520px){.bgc{font-size:11.5px}.bgc .dt{display:none}}
+/* v32: 종이 빙고판 그대로 · ORT 확인 기다림 · 빙고판 밖 책 */
+.bgc.wait{border:3px dashed #2E7D32;background:#EAF5EA}
+/* v33: 토요일 보강 · 단어 테스트 */
+.wkbox{border-radius:14px;padding:13px 16px;margin-bottom:14px;font-weight:800;line-height:1.6;font-size:15.5px;border:2px solid var(--line);background:#fff;color:var(--navy)}
+.wkbox.ok{border-color:#2E7D32;background:#EAF5EA;color:#1B5E20}.wkbox.warn{border-color:#C63A26;background:#FDECEA;color:#9B2C1E}
+.wkbox .bar{height:10px;border-radius:9px;background:#E7EAF0;margin-top:7px;overflow:hidden}.wkbox .bar i{display:block;height:100%;background:var(--red)}
+.vttabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}.vttabs button{border:2px solid var(--line);background:#fff;border-radius:22px;padding:8px 14px;font-size:15px;font-weight:800;color:var(--navy);cursor:pointer}
+.vttabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.vtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.vtu{border:2px solid var(--line);border-radius:12px;background:#fff;padding:10px 6px;text-align:center;font-weight:900;color:var(--navy);cursor:pointer;font-size:15px}
+.vtu small{display:block;font-size:12px;color:var(--mid);font-weight:700;margin-top:3px}.vtu.pass{background:var(--navy);color:#fff;border-color:var(--navy)}.vtu.pass small{color:#F2B705}
+.vtu.try{border-color:var(--red)}
+.vtbook{font-weight:900;color:var(--navy);margin:14px 0 6px;font-size:16px}
+.vtw{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line)}
+.vtw b{font-size:18px;color:var(--navy)}.vtw .ip{color:var(--mid);font-size:13px}.vtw .ko{font-weight:800;font-size:15.5px}.vtw .en{grid-column:1/4;color:#3E4759;font-size:13.5px}
+.vtw .st{color:var(--red);font-size:12px;font-weight:900}
+.vtq{font-size:30px;font-weight:900;color:var(--navy);text-align:center;margin:18px 0 6px}.vtq.ko{font-size:22px}
+.vtin{width:100%;font-size:24px;padding:12px;border:2px solid var(--line);border-radius:12px;text-align:center;box-sizing:border-box;font-weight:800}
+.vtres{font-size:16px;line-height:1.8;font-weight:800}.vtres .miss{color:var(--red)}
+.bgc.wait:before{content:'⏳ 선생님 확인';position:absolute;top:3px;left:0;right:0;font-size:10px;color:#2E7D32;font-weight:900}
+.bgc.none{background:#EEE;color:#888;cursor:default;font-size:11px}
+.bgc.other{border-style:dotted}
+.bgextra{margin-top:16px;padding:12px;border:1.5px dashed var(--line);border-radius:12px}
+.bgextra b{color:var(--navy)}.bgextra .ch{display:inline-block;margin:5px 5px 0 0;padding:6px 10px;border-radius:9px;border:1.5px solid var(--line);font-size:13px;font-weight:800;cursor:pointer;background:#fff}
+.bgextra .ch.done{background:var(--navy);color:#fff;border-color:var(--navy)}.bgextra .ch.pick{border-color:var(--red);background:var(--red-l)}
+/* v32: 번역 기능이 켜지면 화면을 가림 */
+html.translated-ltr body>*:not(#secOv),html.translated-rtl body>*:not(#secOv){visibility:hidden!important}
+#secOv{position:fixed;inset:0;z-index:999;background:#1B3A6B;color:#fff;display:none;align-items:center;justify-content:center;padding:24px;text-align:center}
+#secOv .box{max-width:460px;font-size:18px;line-height:1.7;font-weight:800}#secOv .big{font-size:56px}
+#bugBtn{position:fixed;left:12px;bottom:12px;z-index:60;border:none;border-radius:22px;padding:0 14px;height:44px;font-size:15px;font-weight:800;background:#fff;color:#C63A26;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer}
+#bugOv{position:fixed;inset:0;z-index:97;background:rgba(18,41,78,.85);display:none;align-items:center;justify-content:center;padding:18px}
+#bugOv .box{background:#fff;border-radius:16px;padding:20px;max-width:480px;width:100%;max-height:90vh;overflow:auto}
+#bugOv textarea{width:100%;min-height:110px;font-size:15px;padding:10px;border:1.5px solid var(--line);border-radius:10px;box-sizing:border-box}
+#bugOv select{width:100%;font-size:15px;padding:8px;border-radius:10px;border:1.5px solid var(--line);margin:6px 0 10px}
+.bugrow{font-size:13.5px;padding:8px 0;border-top:1px solid var(--line)}
 .bgov{position:fixed;inset:0;background:rgba(18,41,78,.88);z-index:98;display:flex;align-items:center;justify-content:center;padding:20px}
 .bgov .box{background:#fff;border-radius:22px;max-width:420px;width:100%;padding:26px 22px;text-align:center}
 .bgov .big{font-size:64px;line-height:1.1}
@@ -471,6 +507,19 @@ details.admin summary::-webkit-details-marker{display:none}
 </style>
 </head>
 <body>
+<div id="secOv"><div class="box"><div class="big">🛡️</div>번역 기능이 켜져 있어요.<br>주소창 오른쪽의 번역 아이콘을 눌러 <b>「원래 언어로 보기(영어)」</b>를 고르거나 새로고침하면 다시 쓸 수 있어요.<br><small style="font-weight:700;opacity:.85">낭독원 사이트는 번역 기능 없이 내 힘으로 풀어요. (선생님께 기록이 남아요)</small></div></div>
+<div id="bugOv" onclick="if(event.target===this)bugClose()"><div class="box">
+  <h3 style="margin:0 0 6px;color:var(--navy)">🐞 버그 헌터 — 고장 난 곳 알려 주기</h3>
+  <div class="hint">사이트에서 이상한 곳(글자가 틀림, 버튼이 안 눌림, 점수가 이상함…)을 찾으면 알려 주세요. 선생님이 확인하고 진짜 버그면 <b>코인</b>을 줘요! 🪙<br><small>※ 버그를 찾았으면 그걸로 점수를 올리지 말고 바로 알려 줘야 상을 받아요.</small></div>
+  <label style="margin-top:10px;display:block">어디에서?</label>
+  <select id="bugWhere"><option>빙고판</option><option>단어 익히기</option><option>다독하기·스토리맵</option><option>퀴즈 채점</option><option>실시간 통역</option><option>보카 배틀</option><option>포레스트</option><option>파닉스 리더스</option><option>순위·홈</option><option>기타</option></select>
+  <label>무엇이 이상한가요? (어떻게 하면 생기는지도)</label>
+  <textarea id="bugWhat" maxlength="500" placeholder="예) Froggy 빙고판에서 Froggy Eats Out을 읽었는데 칸이 안 채워져요."></textarea>
+  <div class="msg" id="bugMsg"></div>
+  <div class="center" style="margin-top:10px"><button class="btn btn-go" onclick="bugSend()">보내기</button> <button class="btn btn-ghost" onclick="bugClose()">닫기</button></div>
+  <div id="bugMine" style="margin-top:12px"></div>
+</div></div>
+<button id="bugBtn" style="display:none" onclick="bugOpen()">🐞 버그 제보</button>
 <header class="site-head"><div class="in">
   <img src="data:image/png;base64,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" alt="낭독원 × 리딩오션">
   <button id="chBtn" onclick="chToggle()" title="축하 소리 켜기/끄기" style="position:fixed;right:12px;bottom:12px;z-index:60;border:none;border-radius:50%;width:44px;height:44px;font-size:20px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer">🔊</button>
@@ -479,6 +528,7 @@ details.admin summary::-webkit-details-marker{display:none}
     <button data-p="phon" id="navPhon" onclick="go('phon')">파닉스 리더스</button>
     <button data-p="bingo" onclick="go('bingo')">빙고판</button>
     <button data-p="word" onclick="go('word')">단어 익히기</button>
+    <button data-p="vt" onclick="go('vt')">📝 단어 테스트</button>
     <button data-p="read" onclick="go('read')">다독하기</button>
     <button data-p="grade" onclick="go('grade')">퀴즈 채점</button>
     <button data-p="live" onclick="go('live')">🎙️ 실시간 통역!</button>
@@ -521,9 +571,11 @@ details.admin summary::-webkit-details-marker{display:none}
   </div></div>
   <div class="main">
     <div class="panel" style="flex:2 1 460px">
+      <div id="weekBox"></div>
       <h2>오늘 할 일</h2>
       <button class="todo" id="todoPhon" onclick="go('phon')">🥚 파닉스 리더스 <small>듣고 따라 읽기 · 질문에 대답하기 · 오늘의 일기</small></button>
       <button class="todo" id="todoBingo" onclick="go('bingo')">🎯 빙고판에서 다음 책 고르기 <small>읽을 책은 내가 정해요</small></button>
+      <button class="todo" id="todoVt" onclick="go('vt')">📝 단어 테스트 <small>정독 단어는 수업 전에 꼭 · 초등 800 · 능률VOCA</small></button>
       <button class="todo" id="todoWord" onclick="go('word')">🔤 단어 익히기 <small>책 읽기 전에 · 5개씩</small></button>
       <button class="todo" id="todoRead" onclick="go('read')">📖 다독하기 <small>음원 들으며 1회독 · 책 덮고 음원 들으며 스토리맵</small></button>
       <button class="todo" id="todoGrade" onclick="go('grade')">📚 퀴즈북 채점하기 <small>종이 퀴즈북을 다 풀었으면</small></button>
@@ -584,6 +636,23 @@ details.admin summary::-webkit-details-marker{display:none}
       <div class="progress" id="wdProg"></div>
       <div id="wdArea"></div>
       <div style="margin-top:14px"><button class="btn btn-ghost" onclick="wordHome()">← 책 다시 고르기</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- v33: 단어 테스트 -->
+<section class="page" id="pg-vt">
+  <div class="gradewrap">
+    <div class="card" id="vtPick">
+      <label>📝 단어 테스트</label>
+      <div class="vttabs" id="vtTabs"></div>
+      <div id="vtUnits"><div class="hint">불러오는 중…</div></div>
+      <div class="hint" id="vtHint"></div>
+    </div>
+    <div class="card" id="vtPlay" style="display:none">
+      <label id="vtTitle"></label>
+      <div id="vtArea"></div>
+      <div style="margin-top:14px"><button class="btn btn-ghost" onclick="vtHome()">← 다른 단원 고르기</button></div>
     </div>
   </div>
 </section>
@@ -782,6 +851,7 @@ function doLogin(){
     if(!d||!d.ok){m.className='msg err';m.textContent=(d&&d.error)||'들어가지 못했어요.';document.getElementById('loginPin').value='';return;}
     CUR.name=d.name;CUR.mine=d.records||[];CUR.pin=p;CUR.rank=d.rank||null;CUR.video=!!d.video;
     CUR.total=d.total||0;CUR.mode=d.mode||'quiz';CUR.quizFrom=d.quizFrom||200;CUR.wordsUntil=d.wordsUntil||100;CUR.passes=d.passes||[];   /* v27 */
+    CUR.week=d.week||null;VT.loaded=false;   /* v33 */
     document.getElementById('loginPin').value='';
     document.getElementById('helloName').textContent='📖 '+d.name+' 학생! 어떤 퀴즈북으로 봤나요?';
     renderMine();renderHome();renderRank();go('home');
@@ -1681,8 +1751,10 @@ function myLevel(){var mine=(CUR.mine||[]).slice().reverse(),hi=null;
 function go(p,keep){
   try{wgStop();}catch(e){}
   try{btStop();}catch(e){}
-  ['login','home','rank','grade','word','bingo','read','phon','live','forest','battle'].forEach(function(x){document.getElementById('pg-'+x).classList.toggle('on',x===p);});
+  ['login','home','rank','grade','word','bingo','read','phon','live','forest','battle','vt'].forEach(function(x){document.getElementById('pg-'+x).classList.toggle('on',x===p);});
   document.getElementById('nav').style.display=p==='login'?'none':'flex';
+  document.getElementById('bugBtn').style.display=p==='login'?'none':'';   /* v32 */
+  if(p==='vt')vtHome();   /* v33 */
   document.querySelectorAll('#nav button[data-p]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-p')===p);});
   if(p==='grade'&&!keep){backToGrade();return;}
   if(p==='home')renderHome();
@@ -1716,6 +1788,7 @@ function homeNext(phOn){
 }
 function renderHome(){
   if(!CUR.name)return;
+  weekRender();   /* v33 */
   var i=myLevel(),L=i===null?null:ROADMAP[i],stage=L?L[0].replace(/\s*\d$/,''):'',ch=CHAR[stage]||['',''];
   var art=document.getElementById('heroArt');
   art.innerHTML='<div class="avc" onclick="go(\'forest\')" title="위즈덤 포레스트로">'+charHtml(ch[0]||'c0',FR.wear||{},96)+'</div>';
@@ -1861,7 +1934,7 @@ function wgBoss(){
 
 /* ④ 단어 테스트 — 단어 전부, 영어를 보고 뜻 고르기. 70% 이상이면 책 읽기로 (v31: 75 → 70) */
 function wgTest(){
-  wgStop();var q=shuf(WD.words.slice()),total=q.length,i=0,right=0,missed=[];
+  wgStop();var q=shuf(WD.words.slice()),total=q.length,i=0,right=0,missed=[],ans=[],t0=Date.now();   /* v32: 고른 뜻을 서버로 보내 서버가 채점 */
   document.getElementById('wdProg').innerHTML=wgSteps(3);
   var show=function(){
     if(i>=total){var pct=Math.round(right/total*100),pass=pct>=70;
@@ -1871,12 +1944,12 @@ function wgTest(){
       else h+='<div class="fixmsg fixno">70%가 넘어야 책 읽기가 열려요. 틀린 단어를 다시 보고 한 번 더!</div><div class="wgmiss">'+missed.map(function(w){return '<div><b>'+esc(w.w)+'</b><span>'+esc(w.m)+'</span></div>';}).join('')+'</div><div class="center" style="margin-top:14px"><button class="btn btn-ghost" onclick="wgMole()">🐹 두더지로 연습</button> <button class="btn btn-go" onclick="wgTest()">📝 다시 테스트</button></div>';
       wgArea().innerHTML=h;
       jsonp('wordSave','&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin+'&series='+encodeURIComponent(WD.key.series)+'&title='+encodeURIComponent(WD.key.title)
-        +'&right='+right+'&total='+total+'&test=1&missed='+encodeURIComponent('[테스트 '+pct+'%'+(pass?' 통과':' 다시')+'] '+missed.map(function(w){return w.w;}).join(', '))).catch(function(){});
+        +'&right='+right+'&total='+total+'&test=1&ms='+(Date.now()-t0)+'&ans='+encodeURIComponent(ans.join(','))+'&missed='+encodeURIComponent('[테스트 '+pct+'%'+(pass?' 통과':' 다시')+'] '+missed.map(function(w){return w.w;}).join(', '))).catch(function(){});
       return;}
     var w=q[i],opts=shuf([w].concat(wgOthers(w,3,false)));
     wgArea().innerHTML='<div class="hint center">'+(i+1)+' / '+total+' · 70% 이상이면 통과</div><div class="wdword">'+esc(w.w)+'</div><button class="wdspk" onclick="speak(\''+esc(w.w).replace(/'/g,"\\'")+'\')">🔊 발음 듣기</button><div style="margin-top:16px" id="wtOpts"></div>';
     var box=document.getElementById('wtOpts');opts.forEach(function(o){var b=document.createElement('button');b.className='wdchoice';b.textContent=o.m;
-      b.onclick=function(){if(box.dataset.lock)return;box.dataset.lock='1';if(o===w){right++;b.classList.add('good');}else{missed.push(w);b.classList.add('bad');}i++;setTimeout(show,450);};box.appendChild(b);});
+      b.onclick=function(){if(box.dataset.lock)return;box.dataset.lock='1';ans.push(encodeURIComponent(w.w)+':'+mh(o.m));if(o===w){right++;b.classList.add('good');}else{missed.push(w);b.classList.add('bad');}i++;setTimeout(show,450);};box.appendChild(b);});
   };
   show();
 }
@@ -2007,36 +2080,57 @@ function party(n,kind){cheer(kind||(n>=90?'big':n>=40?'mid':'small'));var c=['#C
   document.body.appendChild(e);(function(x){setTimeout(function(){x.remove();},4500);})(e);}}
 function clap(){party(18);}
 /* ===== v4: 다독 빙고판 — 아이가 읽을 책을 고르고(★), 읽은 책은 자동으로 채워짐 ===== */
-var BG={name:'',loaded:false,read:[],picks:[],ser:''};
+var BG={name:'',loaded:false,read:[],picks:[],ser:'',ortWait:[]};
 var BG_GOAL={5:5,4:4,3:3};
 var BG_REWARD={5:'🏆 5줄 빙고! 상을 받아요 — 선생님께 이 화면을 보여 주세요.',4:'🎡 4줄 빙고! 돌림판을 2번 돌려요 — 선생님께 이 화면을 보여 주세요.',3:'🎡 3줄 빙고! 돌림판을 1번 돌려요 — 선생님께 이 화면을 보여 주세요.'};
-function bgSer(s){return String(s||'').replace(/\s*2026\s*개정/,'').trim();}
+/* v32: 종이 퀴즈북 빙고판과 똑같은 칸 배치 (0 = FREE · {x} = 책 없음 칸 · {t,s} = 다른 시리즈 책) */
+var BINGO_BOARDS={"Biscuit":{"boards":[{"r":3,"c":3,"g":3,"cells":["Bathtime for Biscuit",0,"Biscuit in the Garden","Biscuit and the Baby","Biscuit and the Little Pup","Biscuit Loves the Library","Biscuit and the Big Parade","Biscuit Goes to School",0]},{"r":3,"c":3,"g":3,"cells":["Biscuit Meets the Class Pet",0,"Biscuit's Day at the Farm","Biscuit Plays Ball","Biscuit Visits the Big City",0,0,"Biscuit Wins a Prize","Biscuit's Big Friend"]}]},"Little Critter":{"boards":[{"r":4,"c":4,"g":4,"cells":["Bye-Bye, Mom and Dad","What a Good Kitty",0,"We Love You Little Critter","This Is My Town","Tiger's Birthday","The New Fire Truck","The Fall Festival","Snowball Soup","Snow Day","Skating Day","Show and Tell","Play It Safe","Play Ball","Our Tree House",0]},{"r":4,"c":4,"g":4,"cells":["Our Friend Sam",0,"New Kid in Town","My Trip to the Farm","The Mixed-up Morning","Me Too!","Just Saving My Money","Just Pick Us, Please!","Just My Best Friend","Just Me and My Babysitter","Just Helping My Dad",0,0,"Just a Little Sick","Just a Little Love","Our Park"]}]},"Fancy Nancy":{"boards":[{"r":5,"c":5,"g":5,"cells":["Fancy Nancy: Pajama Day","Fancy Nancy and the Delectable Cupcakes","Fancy Nancy: Best Reading Buddies","Fancy Nancy: The 100th Day of School","Fancy Nancy: Every Day Is Earth Day","Fancy Nancy: The Dazzling Book Report","Fancy Nancy: My Family History","Fancy Nancy: Bubbles, Bubbles, and More Bubbles!","Fancy Nancy: Peanut Butter and Jellyfish",0,"Fancy Nancy: Elegant Easter","Fancy Nancy: Sand Castles and Sand Palaces","Fancy Nancy and the Sensational Babysitter","Fancy Nancy and the Fall Foliage","Fancy Nancy and the Too-Loose Tooth","Fancy Nancy: JoJo and the Twins",0,"Fancy Nancy and the Boy from Paris","Fancy Nancy at the Museum","Fancy Nancy: Poison Ivy Expert","Fancy Nancy Sees Stars","Fancy Nancy: The Show Must Go On","Fancy Nancy: It's Backward Day!","Fancy Nancy and the Mean Girl",0]},{"r":4,"c":4,"g":4,"cells":["Fancy Nancy: Apples Galore!","Fancy Nancy: Spectacular Spectacles","Fancy Nancy: Too Many Tutus","Fancy Nancy: Splendid Speller","Fancy Nancy: Super Secret Surprise Party","Fancy Nancy: Time for Puppy School","Fancy Nancy: JoJo's First Day Jitters","Fancy Nancy and the Late, Late, LATE Night",0,"Fancy Nancy: The Worst Secret Keeper Ever","Fancy Nancy: Heart to Heart","Fancy Nancy and the Missing Easter Bunny","Fancy Nancy: Our Thanksgiving Banquet","Fancy Nancy: Halloween... or Bust!",0,"Fancy Nancy: Budding Ballerina"]}]},"Amelia Bedelia":{"boards":[{"r":5,"c":5,"g":5,"cells":["Merry Christmas, Amelia Bedelia","Amelia Bedelia and the Cat","Amelia Bedelia Talks Turkey","Bravo, Amelia Bedelia!",0,"Come Back, Amelia Bedelia",0,"Amelia Bedelia and the Baby","Amelia Bedelia and the Surprise Shower","Amelia Bedelia Goes Camping","Amelia Bedelia Under Construction","Amelia Bedelia, Cub Reporter","Amelia Bedelia",0,"Amelia Bedelia's Masterpiece",0,"Calling Doctor Amelia Bedelia","Amelia Bedelia's Family Album","Go West, Amelia Bedelia!","Happy Haunting, Amelia Bedelia","Play Ball, Amelia Bedelia","Thank You, Amelia Bedelia",0,"Good Driving, Amelia Bedelia","Good Work, Amelia Bedelia"]}]},"Berenstain Bears":{"boards":[{"r":4,"c":4,"g":4,"cells":["The Double Dare","The Gift of Courage","We Love Our Dad!","The Big Blooper","The Excuse Note","The Prize Pumpkin","The Truth","Moving Day","Mama's New Job","Too Much TV","We Love Our Mom!","The Real Easter Eggs","Count Their Blessings","Lend a Helping Hand","Too Much Birthday","Jobs Around Town"]},{"r":4,"c":5,"g":5,"cells":["The Sitter","The Tooth Fairy","The Big Question","The Night Before Christmas",0,"Kindness Counts","The Trouble with Friends","Go to Camp","The Bad Habit","The Trouble with Chores","Don't Pollute","The Trouble with Grownups","Go to the Doctor","No Girls Allowed",0,"The Ghost of the Forest","The Homework Hassle","Learn About Strangers","The Really Big Pet Show",0]}]},"Black Lagoon":{"boards":[{"r":4,"c":4,"g":4,"cells":["The School Nurse from the Black Lagoon","The Principal from the Black Lagoon","The Dentist from the Black Lagoon","The Cafeteria Lady from the Black Lagoon","The Art Teacher from the Black Lagoon",0,"The Librarian from the Black Lagoon","The Bully from the Black Lagoon","The School Bus Driver from the Black Lagoon","The Music Teacher from the Black Lagoon","The Teacher from the Black Lagoon","The School Secretary from the Black Lagoon","The Gym Teacher from the Black Lagoon",0,0,0]}]},"Froggy":{"boards":[{"r":5,"c":5,"g":5,"cells":["Froggy Bakes a Cake","Froggy's Best Christmas","Froggy Eats Out","Froggy's First Kiss","Froggy Goes to the Doctor","Froggy's Halloween","Froggy Learns to Swim","Froggy's Sleepover","Froggy's Baby Sister","Froggy Plays T-ball","Froggy Plays in the Band","Froggy Goes to School","Let's Go, Froggy!","Froggy Plays Soccer","Froggy Gets Dressed","Froggy Goes to the Library","Froggy Rides a Bike","Froggy's Day with Dad","Froggy Goes to Camp","Froggy's Lemonade Stand","Froggy Goes to Bed","Froggy's Best Babysitter","Froggy Gets a Doggy","Froggy Goes to Hawaii","Froggy's Worst Playdate"]}]},"Splat the Cat":{"boards":[{"r":4,"c":5,"g":5,"cells":["Splat the Cat Dreams Big",0,"Splat the Cat and the Duck with No Quack","Splat the Cat: Twice the Mice","Splat the Cat: Good Night, Sleep Tight","Splat the Cat and the Obstacle Course","Splat and Seymour, Best Friends Forevermore","Splat the Cat: The Name of the Game","Splat the Cat Makes Dad Glad","Splat the Cat: A Whale of a Tale","Splat the Cat with a Bang and a Clang","Splat the Cat: Up in the Air at the Fair","Splat the Cat and the Quick Chicks","Splat the Cat: I Scream for Ice Cream","Splat the Cat: The Rain Is a Pain","Splat the Cat Takes the Cake","Splat the Cat and the Hotshot","Splat the Cat: Sing Flat","Splat the Cat: Blow, Snow, Blow",0]}]},"Eloise":{"boards":[{"r":4,"c":4,"g":4,"cells":[0,"Eloise Skates!","Eloise Decorates for Christmas","Eloise's New Bonnet","Eloise and the Very Secret Room","Eloise's Pirate Adventure","Eloise Visits the Zoo","Eloise at the Wedding","Eloise's Summer Vacation","Eloise Breaks Some Eggs","Eloise and the Big Parade",0,"Eloise's Mother's Day Surprise","Eloise and the Snowman","Eloise Throws a Party!","Eloise Has a Lesson"]}]},"Fly Guy":{"boards":[{"r":3,"c":3,"g":3,"cells":["Fly High Fly Guy!","Hooray for Fly Guy","I Spy Fly Guy!","Prince Fly Guy","Ride, Fly Guy, Ride","Shoo, Fly Guy!","Super Fly Guy!","There's a Fly Guy in my Soup","There Was an Old Lady Who Swallowed Fly Guy"]},{"r":3,"c":3,"g":3,"cells":["Buzz Boy and Fly Guy","Frankenfly","Fly Guy and the Alienzz","Fly Guy Meets Fly Girl","Fly Guy Presents Space","Fly Guy vs. the Flyswatter!","Fly Guy's Amazing Tricks","Fly Guy's Big Family",0]}]},"Henry and Mudge":{"boards":[{"r":4,"c":4,"g":4,"cells":["Henry and Mudge in the Sparkle Days",0,"Henry and Mudge and the Careful Cousin","Henry and Mudge (The First Book)","Henry and Mudge and the Long Weekend","Henry and Mudge and the Tumbling Trip",0,"Henry and Mudge and a Very Merry Christmas","Henry and Mudge Take the Big Test","Henry and Mudge in the Family Trees","Henry and Mudge and the Wild Goose Chase","Henry and Mudge and Annie's Good Move","Henry and Mudge and the Bedtime Thumps","Henry and Mudge Get the Cold Shivers","Henry and Mudge and Mrs. Hopper's House","Henry and Mudge and the Happy Cat"]},{"r":4,"c":4,"g":4,"cells":["Henry and Mudge and the Sneaky Crackers","Henry and Mudge in the Green Time","Henry and Mudge and the Starry Night","Henry and Mudge and the Great Grandpas","Henry and Mudge and the Best Day of All","Henry and Mudge under the Yellow Moon","Henry and Mudge and the Funny Lunch","Henry and Mudge and the Big Sleepover","Henry and Mudge and the Wild Wind",0,"Henry and Mudge in Puddle Trouble","Henry and Mudge and the Snowman Plan","Henry and Mudge and the Forever Sea","Henry and Mudge and Annie's Perfect Pet","Henry and Mudge and the Tall Tree House",0]}]},"Mr. Men":{"boards":[{"r":5,"c":5,"g":5,"cells":["Mr. Birthday","Mr. Chatterbox","Mr. Dizzy","Mr. Greedy","Mr. Lazy","Mr. Bounce","Mr. Christmas","Mr. Forgetful","Mr. Grumble","Mr. Mean","Mr. Brave","Mr. Clever","Mr. Funny","Mr. Grumpy","Mr. Men","Mr. Bump","Mr. Cool",0,"Mr. Impossible","Mr. Fussy","Mr. Busy","Mr. Daydream","Mr. Good","Mr. Jelly","Mr. Happy"]},{"r":5,"c":5,"g":5,"cells":["Mr. Messy","Mr. Uppity","Mr. Strong",0,"Mr. Nosey","Mr. Mischief","Mr. Worry","Mr. Tall","Mr. Silly","Mr. Perfect","Mr. Muddle",0,"Mr. Tickle","Mr. Skinny","Mr. Quiet","Mr. Nobody","Mr. Wrong","Mr. Clumsy","Mr. Slow","Mr. Rude","Mr. Noisy","Mr. Nonsense","Mr. Topsy-Turvy","Mr. Small","Mr. Rush"]}]},"Magic Tree House":{"boards":[{"r":5,"c":5,"g":5,"cells":["Dinosaurs Before Dark","The Knight at Dawn","Mummies in the Morning","Pirates Past Noon","Carnival at Candlelight","Afternoon on the Amazon","Sunset of the Sabertooth","Midnight on the Moon","Dolphins at Daybreak",0,"Lions at Lunchtime","Polar Bears Past Bedtime","Vacation Under the Volcano","Day of the Dragon King","Season of the Sandstorms","Hour of the Olympics","Tonight on the Titanic","Buffalo Before Breakfast","Tigers at Twilight","Night of the Ninjas","High Tide in Hawaii","Christmas in Camelot",0,"Twister on Tuesday","Earthquake in the Early Morning"]},{"r":4,"c":4,"g":4,"cells":[0,"Night of the New Magicians","Winter of the Ice Wizard","Summer of the Sea Serpent","Ghost Town at Sundown","Haunted Castle on Hallows Eve","Thanksgiving on Thursday","Good Morning, Gorillas","Viking Ships at Sunrise","Dog Heroes","Revolutionary War on Wednesday","Blizzard of the Blue Moon","Dingoes at Dinnertime","Stage Fright on a Summer Night","Revolutionary War (Research Guide)","Civil War on Sunday"]}]},"Nate the Great":{"boards":[{"r":4,"c":4,"g":4,"cells":["Nate the Great","Nate the Great and the Missing Key","Nate the Great and the Tardy Tortoise","Nate the Great and the Fishy Prize","Nate the Great and the Lost List","Nate the Great and the Sticky Case","Nate the Great, San Francisco Detective","Nate the Great and the Hungry Book Club","Nate the Great and the Big Sniff","Nate the Great and the Musical Note","Nate the Great and the Pillowcase","Nate the Great and the Halloween Hunt","Nate the Great and the Snowy Trail","Nate the Great and the Monster Mess","Nate the Great and the Earth Day Robot","Nate the Great and the Missing Birthday Snake"]},{"r":4,"c":4,"g":4,"cells":["Nate the Great and the Phony Clue","Nate the Great Goes Undercover","Nate the Great and the Wandering Word","Nate the Great and the Case of the Fleeing Fang","Nate the Great and the Mushy Valentine",0,"Nate the Great and the Crunchy Christmas","Nate the Great Talks Turkey","Nate the Great, Where Are You?","Nate the Great Stalks Stupidweed","Nate the Great on the Owl Express",0,"Nate the Great and the Boring Beach Bag","Nate the Great and the Stolen Base","Nate the Great Saves the King of Sweden","Nate the Great Goes Down in the Dumps"]}]},"Horrid Henry":{"boards":[{"r":3,"c":3,"g":3,"cells":["Don't Be Horrid, Henry!","Horrid Henry's Sleepover",{"x":"Alone in His Teacher's House"},"Football Fiend","Horrid Henry Gets Rich Quick","Horrid Henry's Haunted House","Horrid Henry's Holiday","Horrid Henry Meets the Queen","Horrid Henry's Rainy Day"]},{"r":3,"c":3,"g":3,"cells":["Horrid Henry Reads a Book","Horrid Henry's Author Visit","Horrid Henry's Birthday Party","Horrid Henry's Christmas Lunch","Horrid Henry's Christmas Play","Horrid Henry's Christmas Presents","Horrid Henry's Nits","Horrid Henry's Sports Day","Horrid Henry's Thank You Letter"]}]},"Geronimo Stilton":{"boards":[{"r":5,"c":5,"g":5,"cells":["Down and Out Down Under","Geronimo's Valentine","Red Pizzas for a Blue Count","Christmas Catastrophe","The Mighty Mount Kilimanjaro","Geronimo Stilton, Secret Agent","A Fabumouse School Adventure","The Secret of Cacklefur Castle","Valentine's Day Disaster","Shipwreck on the Pirate Islands","Cat and Mouse in a Haunted House","The Mummy with No Name","Valley of the Giant Skeletons","The Haunted Castle","The Curse of the Cheese Pyramid","Field Trip to Niagara Falls","The Way of the Samurai","The Search for Sunken Treasure","Surf's Up, Geronimo!","Attack of the Bandit Cats","Lost Treasure of the Emerald Eye","Paws Off, Cheddarface!","The Wild, Wild West","Four Mice Deep in the Jungle",0]}]},"Roald Dahl":{"boards":[{"r":4,"c":4,"g":4,"cells":["Matilda","Charlie and the Great Glass Elevator","Charlie and the Chocolate Factory","Danny, the Champion of the World","The Twits",{"t":"The Prize Pumpkin","s":"Berenstain Bears"},"George's Marvelous Medicine","The Magic Finger","Esio Trot","Fantastic Mr. Fox","The Giraffe and the Pelly and Me","James and the Giant Peach",0,"Going Solo","The BFG",0]}]},"Encyclopedia Brown":{"boards":[{"r":3,"c":3,"g":3,"cells":["Shows the Way","Finds the Clues",0,"Gets His Man",0,"Saves the Day","Keeps the Peace","Lends a Hand",0]}]},"ORT":{"boards":[{"r":5,"c":5,"g":5,"cells":["Top Dog","The Box of Treasure","Who Did That?","Fancy Dress","What a Mess!","The Mud Pie","Look at Me","Look After Me","Stuck!","Go Away, Floppy","The Big Red Bus","Good Old Mum","The Picture Book Man","Go On, Mum!","What Dogs Like","One Wheel","Who Is It?","In the Tent","Hide and Seek","What a Din!","Presents for Dad","Reds and Blues","Push!","Hook a Duck","Good Dog"]},{"r":5,"c":5,"g":5,"cells":["Catkin the Kitten","Floppy's Bone","At the Park","Can You See Me?","Go Away, Cat","The Sandcastle","Making Faces","The Caterpillar","In the Trolley","The Bag in the Bin","Shopping","The Sock","The Pet Shop","Hop! Hop! Pop!","Kipper's Diary","The Headache","See Me Skip","The Ice Cream","Goal!","Go On, Mum!","The Trampoline","Chip's Robot","The Journey","The Enormous Crab","Big Feet"]},{"r":5,"c":5,"g":5,"cells":[0,"The Big Egg","New Trainers","The Baby-sitter","Hiccups","A Sinking Feeling","The Go-Kart",0,"What Is It?","Kipper's Balloon","Out!","Hey Presto!","Spots!","The Water Fight","The Dream","The Odd Egg",0,"The Hole in the Sand","Kipper's Birthday","Got a Job?","The Gull's Picnic","Red Noses","The Ball Pit","A Big Bunch of Flowers",0]},{"r":5,"c":5,"g":5,"cells":["The Lost Puppy","New Trees","Up and Down","The Little Dragon","A New Dog","In a Bit","Fire!","Catch It!","What a Bad Dog!","The Toy's Party","Creepy-crawly!","The Woody Tooth","The New Gingerbread Man",0,"The Foggy Day",0,"Monkey Tricks","Poor Floppy","Put It Back","A Present for Mum","Floppy's Bath","Gorilla on the Run!","Kipper's Laces","The Band","Naughty Children"]}]}};
+function bgSer(s){s=String(s||'').replace(/\s*2026\s*개정/,'').trim();return /^ort\b/i.test(s)?'ORT':s;}
 function bgKey(t){return String(t||'').toLowerCase().replace(/[\u2019\u2018'`]/g,'').replace(/^the\s+/,'').replace(/[^a-z0-9]/g,'');}
-function bgSame(a,b){var A=bgKey(a),B=bgKey(b);if(!A||!B)return false;if(A===B)return true;
-  if(A.length>=8&&B.slice(-A.length)===A)return true;if(B.length>=8&&A.slice(-B.length)===B)return true;return false;}
+function bgAmb(){   /* v32: 다른 책 제목의 끝부분과 같은 제목(예: Amelia Bedelia ↔ Come Back, Amelia Bedelia · The Teacher ↔ The Music Teacher)은 정확히 같아야 같은 책 */
+  if(BG._ambN===KEYS.length&&BG._amb)return BG._amb;var ks={},am={};
+  KEYS.forEach(function(k){ks[bgKey(k.title)]=1;});Object.keys(BINGO_BOARDS).forEach(function(s){bgBoardTitles(s).forEach(function(t){ks[bgKey(t)]=1;});});
+  var L=Object.keys(ks);L.forEach(function(a){L.forEach(function(b){if(a!==b&&b.length>a.length&&b.slice(-a.length)===a)am[a]=1;});});
+  BG._amb=am;BG._ambN=KEYS.length;return am;}
+function bgSame(a,b){var A=bgKey(a),B=bgKey(b);if(!A||!B)return false;if(A===B)return true;var am=bgAmb();
+  if(A.length>=8&&!am[A]&&B.slice(-A.length)===A)return true;if(B.length>=8&&!am[B]&&A.slice(-B.length)===B)return true;return false;}
 function bgAuth(){return '&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin;}
+function bgBoardTitles(s){var out=[];((BINGO_BOARDS[s]||{}).boards||[]).forEach(function(b){b.cells.forEach(function(c){if(typeof c==='string')out.push(c);});});return out;}
 function bgSeriesList(){var m={},order=[];
   KEYS.forEach(function(k){var s=bgSer(k.series);if(!m[s]){m[s]=[];order.push(s);}
-    if(!m[s].some(function(t){return bgSame(t,k.title);}))m[s].push(k.title);});
+    if(!m[s].some(function(t){return bgKey(t)===bgKey(k.title);}))m[s].push(k.title);});   /* v32: 같은 제목만 하나로 */
+  Object.keys(BINGO_BOARDS).forEach(function(s){if(!m[s]){m[s]=[];order.push(s);}
+    bgBoardTitles(s).forEach(function(t){if(!m[s].some(function(x){return bgSame(x,t);}))m[s].push(t);});});
   return {map:m,order:order};}
 function bgDone(title){for(var i=0;i<BG.read.length;i++)if(bgSame(BG.read[i].t,title))return BG.read[i];return null;}
 function bgPicked(s,title){return BG.picks.some(function(p){return bgSer(p.s)===s&&bgSame(p.t,title);});}
+function bgWait(title){return (BG.ortWait||[]).some(function(t){return bgSame(t,title);});}
 function bgLayout(n){var out=[];while(n>0){var size=n>=21?5:(n>=13?4:3),take=Math.min(n,size*size);out.push({size:size,n:take});n-=take;}return out;}
-function bgBoards(s,books){var lay=bgLayout(books.length),i=0;
+function bgCell(s,t,os){var d=bgDone(t);return {t:t,os:os||'',done:!!d,date:d?d.d:'',pick:!d&&bgPicked(s,t),wait:!d&&s==='ORT'&&bgWait(t)};}
+function bgBoards(s,books){
+  if(BINGO_BOARDS[s])return BINGO_BOARDS[s].boards.map(function(B){
+    return {r:B.r,c:B.c,goal:B.g,cells:B.cells.map(function(c){
+      if(!c)return {free:true,done:true};
+      if(typeof c==='string')return bgCell(s,c);
+      if(c.x)return {free:true,done:true,none:true,label:'책 없음'};
+      return bgCell(s,c.t,c.s);})};});
+  var lay=bgLayout(books.length),i=0;   /* 종이 빙고판이 없는 시리즈는 예전처럼 자동 배치 */
   return lay.map(function(L){var cells=[];for(var k=0;k<L.size*L.size;k++){
-      if(k<L.n){var t=books[i++],d=bgDone(t);cells.push({t:t,done:!!d,date:d?d.d:'',pick:!d&&bgPicked(s,t)});}
-      else cells.push({free:true,done:true});}
-    return {size:L.size,cells:cells};});}
-function bgLines(b){var z=b.size,c=b.cells,lines=[],ok=function(i){return c[i].done;};
-  for(var r=0;r<z;r++){var a=[];for(var q=0;q<z;q++)a.push(r*z+q);if(a.every(ok))lines.push(a);}
-  for(var q2=0;q2<z;q2++){var b2=[];for(var r2=0;r2<z;r2++)b2.push(r2*z+q2);if(b2.every(ok))lines.push(b2);}
-  var d1=[],d2=[];for(var k=0;k<z;k++){d1.push(k*z+k);d2.push(k*z+(z-1-k));}
-  if(d1.every(ok))lines.push(d1);if(d2.every(ok))lines.push(d2);return lines;}
+      if(k<L.n)cells.push(bgCell(s,books[i++]));else cells.push({free:true,done:true});}
+    return {r:L.size,c:L.size,goal:BG_GOAL[L.size],cells:cells};});}
+function bgExtra(s,books){if(!BINGO_BOARDS[s])return [];var on=bgBoardTitles(s);
+  return books.filter(function(t){return !on.some(function(x){return bgSame(x,t);});}).map(function(t){return bgCell(s,t);});}
+function bgLines(b){var R=b.r,C=b.c,c=b.cells,lines=[],ok=function(i){return c[i].done;};
+  for(var r=0;r<R;r++){var a=[];for(var q=0;q<C;q++)a.push(r*C+q);if(a.every(ok))lines.push(a);}
+  for(var q2=0;q2<C;q2++){var b2=[];for(var r2=0;r2<R;r2++)b2.push(r2*C+q2);if(b2.every(ok))lines.push(b2);}
+  if(R===C){var d1=[],d2=[];for(var k=0;k<R;k++){d1.push(k*C+k);d2.push(k*C+(C-1-k));}
+    if(d1.every(ok))lines.push(d1);if(d2.every(ok))lines.push(d2);}
+  return lines;}
 function bgLoad(){BG.name=CUR.name;
   /* v9: 지난번 빙고판을 이 기기에 기억해 두었다가 바로 보여 주고, 서버 최신본은 뒤에서 받아 바꿈 */
   var lk='bgc_'+CUR.name;
   try{var old=JSON.parse(localStorage.getItem(lk)||'null');if(old&&!BG.loaded){BG.read=old.read||[];BG.picks=old.picks||[];BG.loaded=true;BG.stale=true;}}catch(e){}
-  return jsonp('bingoGet',bgAuth()).then(function(d){if(d&&d.ok){BG.read=d.read||[];BG.picks=d.picks||[];BG.loaded=true;BG.stale=false;
+  return jsonp('bingoGet',bgAuth()).then(function(d){if(d&&d.ok){BG.read=d.read||[];BG.picks=d.picks||[];BG.ortWait=d.ortWait||[];BG.loaded=true;BG.stale=false;
     try{localStorage.setItem(lk,JSON.stringify({read:BG.read,picks:BG.picks}));}catch(e){}}return d;});}
 function bingoHome(){
   document.getElementById('bgPick').style.display='';document.getElementById('bgView').style.display='none';
@@ -2054,29 +2148,40 @@ function bingoHome(){
 }
 function bgOpen(s){BG.ser=s;document.getElementById('bgPick').style.display='none';document.getElementById('bgView').style.display='';bgRender(true);window.scrollTo(0,0);}
 function bgEval(s){var books=bgSeriesList().map[s]||[],boards=bgBoards(s,books);
-  var ev=boards.map(function(b,bi){var lines=bgLines(b);return {bi:bi,size:b.size,lines:lines.length,goal:BG_GOAL[b.size],full:b.cells.every(function(c){return c.done;}),ll:lines};});
-  return {books:books,boards:boards,ev:ev};}
+  var ev=boards.map(function(b,bi){var lines=bgLines(b);return {bi:bi,size:b.r+'x'+b.c,lines:lines.length,goal:b.goal,full:b.cells.every(function(c){return c.done;}),ll:lines};});
+  return {books:books,boards:boards,ev:ev,extra:bgExtra(s,books)};}
 function bgRender(celebrate){
   var s=BG.ser,E=bgEval(s),books=E.books,boards=E.boards;
   var nRead=books.filter(function(t){return bgDone(t);}).length,nPick=books.filter(function(t){return !bgDone(t)&&bgPicked(s,t);}).length;
   document.getElementById('bgTitle').textContent='🎯 '+s+' 빙고판';
-  document.getElementById('bgInfo').textContent='읽은 책 '+nRead+' / '+books.length+'권 · 고른 책(★) '+nPick+'권 — 읽지 않은 칸을 누르면 다음에 읽을 책으로 골라져요. (한 번에 3권까지)';
+  document.getElementById('bgInfo').textContent='읽은 책 '+nRead+' / '+books.length+'권 · 고른 책(★) '+nPick+'권 — '+(s==='ORT'?'다 읽은 책 칸을 누르면 선생님께 확인을 부탁해요. 선생님이 확인하면 칸이 채워져요.':'읽지 않은 칸을 누르면 다음에 읽을 책으로 골라져요. (한 번에 3권까지)');
   var ev=E.ev;
   document.getElementById('bgBoards').innerHTML=boards.map(function(b,bi){
     var lines=ev[bi].ll,goal=ev[bi].goal,inLine={};
     lines.forEach(function(l){l.forEach(function(i){inLine[i]=1;});});
-    return '<div class="bgboard"><div class="bghead"><span>빙고 '+(bi+1)+' · '+b.size+'×'+b.size+'</span><small>'+lines.length+'줄 / 목표 '+goal+'줄</small></div>'
-      +'<div class="bggrid" style="grid-template-columns:repeat('+b.size+',1fr)">'+b.cells.map(function(c,ci){
-        if(c.free)return '<div class="bgc free'+(inLine[ci]?' line':'')+'">FREE</div>';
-        var cls='bgc'+(c.done?' done':'')+(c.pick?' pick':'')+(inLine[ci]?' line':'');
+    return '<div class="bgboard"><div class="bghead"><span>빙고 '+(bi+1)+' · '+b.r+'×'+b.c+'</span><small>'+lines.length+'줄 / 목표 '+goal+'줄</small></div>'
+      +'<div class="bggrid" style="grid-template-columns:repeat('+b.c+',1fr)">'+b.cells.map(function(c,ci){
+        if(c.free)return '<div class="bgc free'+(c.none?' none':'')+(inLine[ci]?' line':'')+'">'+(c.none?esc(c.label):'FREE')+'</div>';
+        var cls='bgc'+(c.done?' done':'')+(c.pick?' pick':'')+(c.wait?' wait':'')+(c.os?' other':'')+(inLine[ci]?' line':'');
         var nm=c.t,pre=c.t.slice(0,s.length);if(pre.toLowerCase()===s.toLowerCase()&&/^[:,]?\s+[^'’]/.test(c.t.slice(s.length)))nm=c.t.slice(s.length).replace(/^[:,]?\s+/,'');
         return '<div class="'+cls+'" onclick="bgTap('+bi+','+ci+')">'+esc(nm||c.t)+(c.done&&c.date?'<span class="dt">'+esc(c.date.slice(5))+'</span>':'')+'</div>';}).join('')+'</div>'
-      +(lines.length>=goal?'<div class="bgreward">'+BG_REWARD[b.size]+'</div>':'')+'</div>';}).join('');
-  BG._boards=boards;
+      +(lines.length>=goal?'<div class="bgreward">'+(BG_REWARD[goal]||BG_REWARD[5])+'</div>':'')+'</div>';}).join('')
+    +(E.extra.length?'<div class="bgextra"><b>📚 빙고판 밖 책 '+E.extra.length+'권</b><div class="hint">종이 빙고판에는 없는 책이에요. 읽으면 기록(완독 권수)에는 들어가요.</div>'
+      +E.extra.map(function(c,xi){return '<span class="ch'+(c.done?' done':'')+(c.pick?' pick':'')+'" onclick="bgTapX('+xi+')">'+(c.done?'✓ ':c.pick?'★ ':'')+esc(c.t)+'</span>';}).join('')+'</div>':'');
+  BG._boards=boards;BG._extra=E.extra;
   bgCheck(s,ev,books.length,celebrate);
 }
-function bgTap(bi,ci){var c=BG._boards[bi].cells[ci];if(!c||c.free)return;
+function bgTapX(xi){bgTapC(BG._extra[xi]);}
+function bgTap(bi,ci){bgTapC(BG._boards[bi].cells[ci]);}
+function bgOrt(c){   /* v32: ORT는 퀴즈가 없어서 — 다 읽었으면 선생님께 확인 부탁 */
+  if(c.wait){alert('선생님이 확인하고 있어요. 조금만 기다려요! ⏳');return;}
+  if(!confirm('「'+c.t+'」 책을 다 읽었나요?\n누르면 선생님께 확인 부탁이 가요. 선생님이 확인하면 빙고 칸이 채워져요.'))return;
+  BG.ortWait=(BG.ortWait||[]).concat([c.t]);bgRender(false);
+  jsonp('ortRead',bgAuth()+'&title='+encodeURIComponent(c.t)).then(function(d){if(d&&!d.ok){alert(d.error||'다시 눌러 주세요.');BG.ortWait=BG.ortWait.filter(function(t){return t!==c.t;});bgRender(false);}})
+    .catch(function(){alert('인터넷이 느려요. 다시 눌러 주세요.');BG.ortWait=BG.ortWait.filter(function(t){return t!==c.t;});bgRender(false);});}
+function bgTapC(c){if(!c||c.free)return;
   if(c.done){alert('이미 읽은 책이에요! ('+(c.date||'')+')');return;}
+  if(BG.ser==='ORT'){bgOrt(c);return;}
   var on=!c.pick,s=BG.ser;
   if(on&&bgSeriesList().map[s].filter(function(t){return !bgDone(t)&&bgPicked(s,t);}).length>=3){alert('읽을 책은 한 번에 3권까지 고를 수 있어요. 먼저 고른 책을 읽고 채점해요!');return;}
   if(on)BG.picks.push({s:s,t:c.t});else BG.picks=BG.picks.filter(function(p){return !(bgSer(p.s)===s&&bgSame(p.t,c.t));});
@@ -2095,7 +2200,7 @@ function bgCheck(s,ev,nBooks,celebrate){
   var show=null;
   ev.forEach(function(e,i){var p=prev.b[i]||{l:0,f:false};
     if(e.lines>p.l){
-      if(e.lines>=e.goal&&p.l<e.goal){show=show&&show.lv>2?show:{lv:2,e:e};
+      if(e.lines>=e.goal&&p.l<e.goal){show=show&&show.lv>2?show:{lv:2,e:e};   /* v32: 상은 종이 빙고판 목표 줄 수로 */
         jsonp('bingoEvent',bgAuth()+'&type=goal&series='+encodeURIComponent(s)+'&board='+(i+1)+'&lines='+e.goal+'&size='+e.size).catch(function(){});}
       else if(!show)show={lv:1,e:e};}
     if(e.full&&!p.f)show=show&&show.lv>3?show:{lv:3,e:e};});
@@ -2106,7 +2211,7 @@ function bgCheck(s,ev,nBooks,celebrate){
 function bgCelebrate(o,s){
   var box=document.getElementById('bgOvBox'),h='';
   if(o.lv===1){clap();h='<div class="big">👏👏</div><h3>빙고 한 줄!</h3><p>'+esc(s)+' 빙고판에 한 줄이 생겼어요. 계속 가 볼까요?</p>';}
-  if(o.lv===2){party(90,'big');h='<div class="big">🎺🎉</div><h3>'+o.e.goal+'줄 빙고 성공!</h3><p>'+BG_REWARD[o.e.size]+'</p>';}
+  if(o.lv===2){party(90,'big');h='<div class="big">🎺🎉</div><h3>'+o.e.goal+'줄 빙고 성공!</h3><p>'+(BG_REWARD[o.e.goal]||BG_REWARD[5])+'</p>';}
   if(o.lv===3){bgPetals(60);party(60,'big');h='<div class="big">'+bnfImg(3)+'</div><h3>빙고판 전체 완성!</h3><p>이 빙고판의 책을 모두 읽었어요. 정말 대단해요!</p>';}
   if(o.lv===4){bgPetals(110);party(140,'grand');
     h='<div class="kama">🎎</div><h3>꽃가마 출발! 시리즈 완성!</h3><p>'+esc(s)+' 시리즈를 모두 읽었어요! 오늘의 주인공이에요. 선생님께 꼭 보여 주세요!</p>';}
@@ -2328,6 +2433,83 @@ function btEnd(){btStop();btBox().innerHTML='<div class="hint center">⏳ 점수
 /* v21: 코드 열어 보는 친구에게 */
 try{console.log('%c잠깐! 🛑','font-size:28px;font-weight:900;color:#C63A26');
 console.log('%c여기서 점수나 코인을 바꿔도 소용없어요. 채점·코인은 모두 학원 서버가 정해요.\n이상한 요청은 이름과 함께 선생님께 기록이 남아요.\n코딩이 궁금하면 원장님께 말해 줘요 — 같이 만들어 봐요! 😊','font-size:15px;color:#1B3A6B');}catch(e){}
+</script>
+<script>
+/* ===== v32: 🛡️ 번역 감지 · 🐞 버그 헌터 ===== */
+function mh(t){var h=5381;t=String(t).trim();for(var i=0;i<t.length;i++)h=((h*33)^t.charCodeAt(i))>>>0;return h.toString(36);}   /* 서버 mh_와 같아야 함 */
+(function(){var on=false,sent=false;
+  function chk(){var h=document.documentElement,c=h.className||'',bad=/translated-(ltr|rtl)/.test(c)||!!document.querySelector('font[style*="vertical-align"]')||(h.lang&&!/^ko/i.test(h.lang));
+    if(bad===on)return;on=bad;document.getElementById('secOv').style.display=bad?'flex':'none';
+    if(bad&&!sent&&typeof CUR!=='undefined'&&CUR.name&&CUR.pin){sent=true;try{jsonp('secReport','&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin+'&kind=translate&detail='+encodeURIComponent((h.lang||'')+' '+c.slice(0,60)+' '+(document.querySelector('.page.on')||{}).id)).catch(function(){});}catch(e){}}}
+  try{new MutationObserver(chk).observe(document.documentElement,{attributes:true,attributeFilter:['class','lang']});}catch(e){}
+  setInterval(chk,2500);})();
+function bugOpen(){document.getElementById('bugMsg').className='msg';document.getElementById('bugMsg').textContent='';document.getElementById('bugOv').style.display='flex';bugMine();}
+function bugClose(){document.getElementById('bugOv').style.display='none';}
+function bugMine(){var box=document.getElementById('bugMine');box.innerHTML='';
+  jsonp('bugMine','&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin).then(function(d){if(!d||!d.ok||!d.list.length)return;
+    box.innerHTML='<b style="color:var(--navy)">내가 알려 준 버그</b>'+d.list.map(function(r){return '<div class="bugrow">'+esc(r.d.slice(5,10))+' · '+esc(r.where)+' — '+esc(r.what.slice(0,60))+'<br><b>'+esc(r.st)+(r.coins?' · 🪙'+esc(r.coins):'')+'</b></div>';}).join('');}).catch(function(){});}
+function bugSend(){var w=document.getElementById('bugWhat').value.trim(),m=document.getElementById('bugMsg');
+  if(w.length<5){m.className='msg err';m.textContent='어떤 문제인지 조금 더 자세히 써 주세요.';return;}
+  m.className='msg';m.textContent='보내는 중…';
+  jsonp('bugReport','&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin+'&where='+encodeURIComponent(document.getElementById('bugWhere').value)+'&what='+encodeURIComponent(w)).then(function(d){
+    if(d&&d.ok){m.className='msg ok';m.textContent='고마워요! 선생님이 확인하고 진짜 버그면 코인을 줄게요 🐞🪙';document.getElementById('bugWhat').value='';bugMine();}
+    else{m.className='msg err';m.textContent=(d&&d.error)||'보내지 못했어요. 다시 눌러 주세요.';}}).catch(function(){m.className='msg err';m.textContent='인터넷이 느려요. 다시 눌러 주세요.';});}
+</script>
+<script>
+/* ===== v33: 🗓️ 토요일 보강 알림 · 📝 단어 테스트 ===== */
+function weekRender(){var box=document.getElementById('weekBox'),w=CUR.week;if(!box)return;if(!w){box.innerHTML='';return;}
+  var pct=Math.min(100,Math.round(w.n/w.need*100)),left=Math.max(0,w.need-w.n),h;
+  if(w.n>=w.need)h='<div class="wkbox ok">🗓️ 이번 주(월~금) 다독 <b>'+w.n+'권</b> — 목표 '+w.need+'권 달성! 토요일 보강 없어요 👍';
+  else if(w.saturday)h='<div class="wkbox warn">🗓️ 이번 주(월~금) 다독 <b>'+w.n+'권</b>이에요. 목표 '+w.need+'권에 '+left+'권 모자라서 <b>토요일 보강</b>이 있어요. 토요일에 학원에 와서 함께 읽어요!';
+  else h='<div class="wkbox">🗓️ 이번 주(월~금) 다독 <b>'+w.n+' / '+w.need+'권</b> — 금요일까지 '+left+'권 더 읽으면 토요일 보강이 없어요!';
+  box.innerHTML=h+'<div class="bar"><i style="width:'+pct+'%"></i></div></div>';}
+var VT={loaded:false,sets:[],mine:{},tab:'',set:'',unit:'',words:[],ans:[],sp:[],t0:0};
+function vtGroup(s){return /^정독 /.test(s)?'정독 단어':s;}
+function vtAuth(){return '&name='+encodeURIComponent(CUR.name)+'&pin='+CUR.pin;}
+function vtHome(){document.getElementById('vtPick').style.display='';document.getElementById('vtPlay').style.display='none';
+  if(!VT.loaded){document.getElementById('vtUnits').innerHTML='<div class="hint">⏳ 불러오는 중…</div>';
+    jsonp('vtSets',vtAuth()).then(function(d){if(!d||!d.ok){document.getElementById('vtUnits').innerHTML='<div class="hint">'+esc((d&&d.error)||'불러오지 못했어요.')+'</div>';return;}
+      VT.sets=d.sets;VT.mine=d.mine||{};VT.loaded=true;if(!VT.tab)VT.tab='정독 단어';vtHome();}).catch(function(){document.getElementById('vtUnits').innerHTML='<div class="hint">인터넷이 느려요. 다시 눌러 주세요.</div>';});return;}
+  var tabs=[];VT.sets.forEach(function(x){var g=vtGroup(x.set);if(tabs.indexOf(g)<0)tabs.push(g);});
+  if(tabs.indexOf(VT.tab)<0)VT.tab=tabs[0];
+  document.getElementById('vtTabs').innerHTML=tabs.map(function(t){return '<button class="'+(t===VT.tab?'on':'')+'" onclick="VT.tab=\''+t.replace(/'/g,"\\'")+'\';vtHome()">'+esc(t)+'</button>';}).join('');
+  var isJd=VT.tab==='정독 단어',lab=isJd?'Lesson ':/800/.test(VT.tab)?'Day ':'DAY ';
+  document.getElementById('vtUnits').innerHTML=VT.sets.filter(function(x){return vtGroup(x.set)===VT.tab;}).map(function(x){
+    return (isJd?'<div class="vtbook">📕 '+esc(x.set.replace(/^정독 /,''))+'</div>':'')+'<div class="vtgrid">'+x.units.map(function(u){var m=VT.mine[x.set+'|'+u.u];
+      return '<div class="vtu'+(m&&m.pass?' pass':m?' try':'')+'" onclick="vtOpen(\''+x.set.replace(/'/g,"\\'")+'\',\''+u.u+'\')">'+lab+u.u+'<small>'+(m&&m.pass?'✓ 통과 '+esc(m.d.slice(5)):m?'다시 도전':u.n+'단어')+'</small></div>';}).join('')+'</div>';}).join('');
+  document.getElementById('vtHint').innerHTML=isJd?'📕 <b>정독 단어는 수업 전에 꼭!</b> 그 레슨 단어를 공부하고 테스트를 통과해 오면 선생님이 수업 전에 확인해요. 뜻은 모든 단어, 철자는 ★(중등 필수) 단어만 써요.':'Day마다 단어를 공부하고 테스트해요. <b>뜻 고르기</b>와 <b>철자 쓰기</b> 모두 80% 넘으면 통과!';}
+function vtOpen(set,unit){VT.set=set;VT.unit=unit;document.getElementById('vtPick').style.display='none';document.getElementById('vtPlay').style.display='';
+  document.getElementById('vtTitle').textContent='📝 '+set+' · '+(/^정독/.test(set)?'Lesson ':'Day ')+unit;
+  var a=document.getElementById('vtArea');a.innerHTML='<div class="hint">⏳ 단어를 불러오는 중…</div>';window.scrollTo(0,0);
+  jsonp('vtWords',vtAuth()+'&set='+encodeURIComponent(set)+'&unit='+encodeURIComponent(unit)).then(function(d){if(!d||!d.ok||!d.words.length){a.innerHTML='<div class="hint">'+esc((d&&d.error)||'단어가 없어요.')+'</div>';return;}VT.words=d.words;vtStudy();}).catch(function(){a.innerHTML='<div class="hint">인터넷이 느려요. 다시 눌러 주세요.</div>';});}
+function vtSpell(w){return /^정독/.test(VT.set)?w.s==='★':true;}
+function vtStudy(){var jd=/^정독/.test(VT.set),ns=VT.words.filter(vtSpell).length;
+  document.getElementById('vtArea').innerHTML='<div class="hint">① 단어를 듣고 뜻을 익혀요 → ② 테스트: 뜻 고르기 '+VT.words.length+'문제'+(ns?' + 철자 쓰기 '+ns+'문제':'')+' (80% 넘으면 통과)</div>'
+    +VT.words.map(function(w,i){return '<div class="vtw"><b>'+esc(w.w)+'</b><span><span class="ko">'+esc(w.m)+'</span>'+(w.ipa?' <span class="ip">'+esc(w.ipa)+'</span>':'')+(jd&&w.s?' <span class="st">'+esc(w.s)+(vtSpell(w)?' 철자':' 뜻만')+'</span>':'')+'</span><button class="wdspk" onclick="speak(VT.words['+i+'].w)">🔊</button>'+(w.en?'<span class="en">'+esc(w.en)+'</span>':'')+'</div>';}).join('')
+    +'<div class="center" style="margin-top:16px"><button class="btn btn-go" onclick="vtTest()">📝 테스트 시작</button></div>';}
+function vtTest(){VT.ans=[];VT.sp=[];VT.t0=Date.now();var q=shuf(VT.words.slice()),i=0,a=document.getElementById('vtArea');
+  var show=function(){if(i>=q.length){vtSpellTest();return;}var w=q[i],pool=VT.words.filter(function(x){return x.m!==w.m;});
+    var opts=shuf([w].concat(shuf(pool).slice(0,3)));
+    a.innerHTML='<div class="hint center">뜻 고르기 '+(i+1)+' / '+q.length+'</div><div class="vtq">'+esc(w.w)+'</div><div class="center"><button class="wdspk" onclick="speak(\''+esc(w.w).replace(/'/g,"\\'")+'\')">🔊 발음</button></div><div style="margin-top:14px" id="vtOpts"></div>';
+    var box=document.getElementById('vtOpts');opts.forEach(function(o){var b=document.createElement('button');b.className='wdchoice';b.textContent=o.m;
+      b.onclick=function(){if(box.dataset.lock)return;box.dataset.lock='1';VT.ans.push(encodeURIComponent(w.w)+':'+mh(o.m));b.classList.add(o===w?'good':'bad');i++;setTimeout(show,350);};box.appendChild(b);});};
+  show();}
+function vtSpellTest(){var q=shuf(VT.words.filter(vtSpell)),i=0,a=document.getElementById('vtArea');
+  var show=function(){if(i>=q.length){vtSend();return;}var w=q[i];
+    a.innerHTML='<div class="hint center">철자 쓰기 '+(i+1)+' / '+q.length+' — 뜻을 보고 영어 단어를 써요</div><div class="vtq ko">'+esc(w.m)+'</div>'+(w.en?'<div class="hint center">'+esc(w.en)+'</div>':'')
+      +'<input class="vtin" id="vtIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="영어로 쓰기"><div class="center" style="margin-top:12px"><button class="btn btn-go" id="vtNext">다음 →</button></div>';
+    var inp=document.getElementById('vtIn'),go2=function(){var v=inp.value.trim();if(!v&&!confirm('모르면 비워 두고 넘어갈까요?'))return;VT.sp.push(encodeURIComponent(w.w)+':'+encodeURIComponent(v));i++;show();};
+    inp.onkeydown=function(e){if(e.key==='Enter')go2();};inp.onpaste=function(e){e.preventDefault();};document.getElementById('vtNext').onclick=go2;inp.focus();};
+  show();}
+function vtSend(){var a=document.getElementById('vtArea');a.innerHTML='<div class="hint center">⏳ 채점하는 중…</div>';
+  jsonp('vtSave',vtAuth()+'&set='+encodeURIComponent(VT.set)+'&unit='+encodeURIComponent(VT.unit)+'&ms='+(Date.now()-VT.t0)+'&ans='+encodeURIComponent(VT.ans.join(','))+'&sp='+encodeURIComponent(VT.sp.join(','))).then(function(d){
+    if(!d||!d.ok){a.innerHTML='<div class="fixmsg fixno">'+esc((d&&d.error)||'채점하지 못했어요. 다시 해 볼까요?')+'</div><div class="center"><button class="btn btn-go" onclick="vtTest()">다시 테스트</button></div>';return;}
+    VT.mine[VT.set+'|'+VT.unit]=d.pass||!(VT.mine[VT.set+'|'+VT.unit]||{}).pass?{pass:d.pass,d:today(),m:d.mr+'/'+d.mt,s:d.st?d.sr+'/'+d.st:'-'}:VT.mine[VT.set+'|'+VT.unit];
+    var h='<div class="result-big"><div class="pct">'+(d.pass?'🎉':'💪')+'</div><div class="sub">'+(d.pass?'통과!':'조금만 더!')+'</div></div><div class="vtres">뜻 고르기 '+d.mr+' / '+d.mt+(d.st?'<br>철자 쓰기 '+d.sr+' / '+d.st:'')+'</div>';
+    if(d.missM.length)h+='<div class="vtres miss">뜻을 틀린 단어: '+esc(d.missM.join(', '))+'</div>';
+    if(d.missS.length)h+='<div class="vtres miss">철자를 틀린 단어: '+esc(d.missS.join(', '))+'</div>';
+    h+='<div class="center" style="margin-top:14px">'+(d.pass?'<button class="btn btn-go" onclick="vtHome()">다른 단원 하기</button>':'<button class="btn btn-ghost" onclick="vtStudy()">📖 다시 공부하기</button> <button class="btn btn-go" onclick="vtTest()">📝 다시 테스트</button>')+'</div>';
+    a.innerHTML=h;if(d.pass)party(80);}).catch(function(){a.innerHTML='<div class="fixmsg fixno">인터넷이 느려요.</div><div class="center"><button class="btn btn-go" onclick="vtSend()">다시 보내기</button></div>';});}
 </script>
 </body>
 </html>
